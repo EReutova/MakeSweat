@@ -201,11 +201,11 @@ const createNewUser = async (req, res) => {
         await client.connect();
 
         const db = client.db("MakeSweat");
-
+        
         const { name, email, age, gender, weight,
             // avatar
         } = req.body;
-
+        
         //Validation
         if (name.length <= 2) {
             return res.status(400).json({ status: 400, message: "Please provide your full name" });
@@ -222,22 +222,32 @@ const createNewUser = async (req, res) => {
         else if (typeof weight !== "number") {
             return res.status(400).json({ status: 400, message: "Please provide your weight in kg/lb" });
         }
-
+        
         // Creates new _id for user
         const _id = uuidv4();
-
+        
         const newUser = { _id, ...req.body };
+        
+        //validation if user was registered or not yet
+        const existingUser = await db.collection("users").findOne({email: newUser.email});
 
-        // Pushes user to "users" collection
-        const result = await db.collection("users").insertOne(newUser);
+        if (existingUser){
+            // if find matching email - give error
+            return res.status(400).json({ status: 400, message: "This email is already being used" })
+        }
+        else {
+            // if not - pushes newUser to "users" collection
+            const result = await db.collection("users").insertOne(newUser);
+    
+            result
+                ? res.status(201).json({ status: 201, _id, newUser, message: "Success! New user was added!" })
+                : res.status(400).json({ status: 400, message: "Something went wrong! Please provide valid data!" });
+        }
 
-        result
-            ? res.status(201).json({ status: 201, _id, newUser, message: "Success! New user was added!" })
-            : res.status(400).json({ status: 400, message: "Something went wrong! Please provide valid data!" });
     }
     catch (error) {
         console.log(error, "error")
-        res.status(500).json({ status: 500, message: "Something went wrong 😭", error });
+        res.status(500).json({ status: 500, message: "Something went wrong...", error });
     }
     finally {
         client.close();
@@ -258,16 +268,17 @@ const getUserById = async (req, res) => {
         const result = await db.collection("users").findOne({ _id });
 
         result
-            ? res.status(200).json({ status: 200, result, message: "Used is found" })
+            ? res.status(200).json({ status: 200, result, message: "User is found" })
             : res.status(400).json({ staus: 400, message: "User is not found" });
 
     } catch (error) {
-        res.status(500).json({ status: 500, message: "Something went wrong 😭" });
+        res.status(500).json({ status: 500, message: "Something went wrong..." });
     }
     finally {
         client.close();
     }
 };
+
 //************** */
 // updateUser, 
 
@@ -289,6 +300,110 @@ const deleteUser = async (req, res) => {
         result
             ? res.status(204).json({ status: 204, data: "User deleted successfully" })
             : res.status(404).json({ status: 404, data: "User is not found" });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ status: 500, data: err.message });
+    }
+    finally {
+        client.close();
+    }
+};
+
+const createNewWorkout = async (req, res) => {
+
+    const client = new MongoClient(MONGO_URI, options);
+
+    try {
+
+        await client.connect();
+
+        const db = client.db("MakeSweat");
+        
+        const { userId, name, type, exercises } = req.body;
+        
+        // Creates new _id for workout
+        const _id = uuidv4();
+        
+        const newWorkout = { _id, ...req.body };
+        
+        // pushing new workout to the "workouts" collection
+        const result = await db.collection("workouts").insertOne(newWorkout);
+
+        //updating the array of user's workouts
+        const query = { _id: newWorkout.userId }
+
+        const newValues = { $push: { workouts:  _id }};
+
+        const workoutsUpdated = await db.collection("users").updateOne(query, newValues);
+
+        result && workoutsUpdated
+            ? res.status(201).json({ status: 201, _id, message: "Success! New workout was created!" })
+            : res.status(400).json({ status: 400, message: "Something went wrong! Please provide valid data!" });
+    }
+    catch (error) {
+        console.log(error, "error")
+        res.status(500).json({ status: 500, message: "Something went wrong...", error });
+    }
+    finally {
+        client.close();
+    }
+};
+
+const getWorkout = async (req, res) => {
+
+    const client = new MongoClient(MONGO_URI, options);
+
+    try {
+        await client.connect();
+
+        const db = client.db("MakeSweat");
+
+        const { _id } = req.params;
+
+        const result = await db.collection("workouts").findOne({ _id });
+
+        result
+            ? res.status(200).json({ status: 200, result, message: "Workout is found" })
+            : res.status(400).json({ staus: 400, message: "Workout is not found" });
+
+    } catch (error) {
+        res.status(500).json({ status: 500, message: "Something went wrong..." });
+    }
+    finally {
+        client.close();
+    }
+};
+//************* */
+// updateWorkout, 
+
+const deleteWorkout = async (req, res) => {
+
+    const client = new MongoClient(MONGO_URI, options);
+    
+    try {
+        await client.connect();
+
+        const { _id } = req.params;
+
+        const db = client.db("MakeSweat");
+
+        //find a workout that we are going to delete
+        const workoutToDelete = await db.collection("workouts").findOne({ _id });
+
+        const query = { _id: workoutToDelete.userId}
+        
+        const newValues = { $pull: { "workouts": _id }};
+        
+        //updating the array of user's workouts - removing one
+        const workoutsUpdated = await db.collection("users").updateOne(query, newValues);
+        
+        //deleting workout
+        const result = await db.collection("workouts").deleteOne({ _id });
+
+        result && workoutsUpdated
+            ? res.status(204).json({ status: 204, data: "Workout is deleted successfully" })
+            : res.status(404).json({ status: 404, data: "Workout is not found" });
     }
     catch (err) {
         console.log(err);
@@ -325,11 +440,6 @@ const getMotivatingQuote = async (req, res) => {
         res.status(500).json({ status: 500, data: req.body, message: err.message })
     }
 }
-// createNewWorkout, 
-// getWorkout,
-// updateWorkout, 
-// deleteWorkout 
-
 
 module.exports = {
     getAllExercises,
@@ -343,10 +453,10 @@ module.exports = {
     getUserById,
     // updateUser, 
     deleteUser,
-    // createNewWorkout, 
-    // getWorkout,
+    createNewWorkout, 
+    getWorkout,
     // updateWorkout, 
-    // deleteWorkout,
+    deleteWorkout,
     getMotivatingQuote
 };
 

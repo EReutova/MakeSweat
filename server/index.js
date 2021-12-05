@@ -14,10 +14,10 @@ const {
     getUserById, 
     // updateUser, 
     deleteUser,
-    // createNewWorkout, 
-    // getWorkout,
+    createNewWorkout, 
+    getWorkout,
     // updateWorkout, 
-    // deleteWorkout,
+    deleteWorkout,
     getMotivatingQuote
 } = require("./handlers")
 
@@ -66,16 +66,16 @@ express()
     .delete("/user/:_id", deleteUser)
 
     // create a new workout ???? need help with it
-    // .post("/workout/:_id", createNewWorkout)
+    .post("/create/workout", createNewWorkout)
 
     // get a workout ???? need help with it
-    // .get("/workout/:_id", getWorkout)
+    .get("/workout/:_id", getWorkout)
 
     // update a workout ???? need help with it
     // .patch("/workout/:_id", updateWorkout)
 
     // delete workout ???? need help with it
-    // .delete("/workout/:_id", deleteWorkout)
+    .delete("/workout/:_id", deleteWorkout)
 
     // get random motivating quote
     .get("/motivating-quote", getMotivatingQuote)

@@ -12,12 +12,15 @@ const {
     // getFilteredExercise,
     createNewUser, 
     getUserById, 
-    // updateUser, 
+    updateUser, 
     deleteUser,
     createNewWorkout, 
     getWorkout,
+    getAllWorkouts,
     // updateWorkout, 
     deleteWorkout,
+    addToFavorite,
+    removeFromFavorite,
     getMotivatingQuote
 } = require("./handlers")
 
@@ -60,22 +63,31 @@ express()
     .get("/user/:_id", getUserById)
 
     // update a user
-    // .patch("/user/:_id", updateUser)
+    .patch("/user/:_id", updateUser)
 
     // delete a user
     .delete("/user/:_id", deleteUser)
 
-    // create a new workout ???? need help with it
+    // create a new workout 
     .post("/create/workout", createNewWorkout)
 
-    // get a workout ???? need help with it
+    // get a workout 
     .get("/workout/:_id", getWorkout)
+
+    //get all workouts
+    .get("/workouts", getAllWorkouts)
 
     // update a workout ???? need help with it
     // .patch("/workout/:_id", updateWorkout)
 
-    // delete workout ???? need help with it
+    // delete workout 
     .delete("/workout/:_id", deleteWorkout)
+
+    //add exercise in favorites
+    .post("/add-favorite", addToFavorite)
+
+    //remove exercise from favorites
+    .delete("/remove-favorite", removeFromFavorite)
 
     // get random motivating quote
     .get("/motivating-quote", getMotivatingQuote)

@@ -7,7 +7,7 @@ export default createGlobalStyle`
     --color-davys-grey: #474847;
     --color-silver: #C2C2C2;
     --color-platinum: #EAEBEA;
-    --color-pine-green: #0B7A75;
+    --color-red-crayola: #F72E4C;
 }
 /* --color-red-crayola: #F72E4C;
 --color-bitter-lemon: #C2E812;
@@ -43,7 +43,7 @@ time, mark, audio, video, select, input {
     /* font-family: 'Poppins', sans-serif; */
 }
 html, body {
-    /* background-color: #F6F3F7; */
+    background-color: var(--color-platinum);
 }
 
 `;

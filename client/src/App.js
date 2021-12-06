@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import GlobalStyles from "./GlobalStyles";
 import NavBar from "./components/NavBar";
+import RandomQuote from "./components/RandomQuote"
 import HomePage from "./components/HomePage";
 import Account from "./components/Account";
 import LogIn from "./components/LogIn";
@@ -17,6 +18,7 @@ function App() {
 		<BrowserRouter>
 			<GlobalStyles />
 			<NavBar />
+            <RandomQuote />
 
 			<Switch>
 				<Route exact path="/">
@@ -39,7 +41,7 @@ function App() {
                     <SignOut />
                 </Route>
 
-                <Route path="/exercise-details">
+                <Route path="/exercise-details/:id">
                     <ExerciseDetails />
                 </Route>
 			</Switch>

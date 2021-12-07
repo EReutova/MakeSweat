@@ -20,20 +20,36 @@ const RandomQuote = () => {
         <Wrapper>
             {
                 quote && 
-                <>
-                    <Qoute>"{quote.quote}"</Qoute>
-                    {
-                        quote.author !== "Unknown" &&
-                            <Author>{quote.author}</Author>
-                    }
-                </>
+                    <>
+                        <Qoute>"{quote.quote}"</Qoute>
+                        {
+                            quote.author !== "Unknown" &&
+                                <Author>{quote.author}</Author>
+                        }
+                    </>
+                
             }
         </Wrapper>
     )
 }
 const Wrapper = styled.div`
-
+    background: var(--color-red-crayola);
+    height: 120px;
+    opacity: 0.8;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 `;
-const Qoute = styled.p``;
-const Author = styled.p``;
+
+const Qoute = styled.p`
+    text-align: center;
+    margin: 0 20px;
+    font-size: 26px;
+`;
+const Author = styled.p`
+    text-align: end;
+    margin: 5px 20px;
+    font-size: 20px;
+`;
 export default RandomQuote;

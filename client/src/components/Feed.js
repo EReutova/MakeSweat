@@ -13,21 +13,26 @@ const Feed = () => {
     }
 
     return(
-        <>
-            <Wrapper>
+        <Wrapper>
+            <Div>
                 {
                     exercises.length !== 0 && 
-
                     exercises.map((exercise)=> {
                         return <ExerciseCard exercise={exercise}/>
                     })
                 }
-            </Wrapper>
+            </Div>
             <Button onClick={handleStartLimit}>More</Button>
-            </>
+        </Wrapper>
     )
 }
 const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
+const Div = styled.div`
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

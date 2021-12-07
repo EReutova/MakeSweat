@@ -25,5 +25,6 @@ const Input = styled.input`
     border: none;
     padding: 10px;
     width: 300px;
+    font-size: 18px;
 `;
 export default SearchBar;

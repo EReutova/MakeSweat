@@ -26,7 +26,6 @@ const Btn = styled.button`
     overflow: hidden;
     transition: 250ms;
     border: none;
-    border-radius: 5px;
 
     &:hover{
         cursor: pointer;

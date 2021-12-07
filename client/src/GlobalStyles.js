@@ -40,10 +40,16 @@ time, mark, audio, video, select, input {
     box-sizing: border-box;
     font-size: 100%;
     vertical-align: baseline;
-    /* font-family: 'Poppins', sans-serif; */
+    font-family: 'Poppins', sans-serif;
 }
 html, body {
-    background-color: var(--color-platinum);
+    background-image: url("https://images.unsplash.com/photo-1516481265257-97e5f4bc50d5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: var(--color-silver);
 }
-
 `;

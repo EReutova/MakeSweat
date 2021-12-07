@@ -8,7 +8,7 @@ export const ExercisesProvider = ({ children }) => {
 
     //variables to hold start and limit for "Load more" button
     const [start, setStart] = useState(0);
-    const [limit, setLimit] = useState(10);
+    const [limit, setLimit] = useState(8);
 
     //variable to hold the search input value
     const [inputValue, setInputValue] = useState("");

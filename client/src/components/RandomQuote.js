@@ -33,9 +33,9 @@ const RandomQuote = () => {
     )
 }
 const Wrapper = styled.div`
-    background: var(--color-red-crayola);
-    height: 120px;
-    opacity: 0.8;
+    background: rgba(247, 46, 76, 0.85);
+    color: #fff;
+    height: 130px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -45,11 +45,14 @@ const Wrapper = styled.div`
 const Qoute = styled.p`
     text-align: center;
     margin: 0 20px;
-    font-size: 26px;
+    font-size: 24px;
+    font-family: 'Paytone One', sans-serif;
 `;
 const Author = styled.p`
     text-align: end;
-    margin: 5px 20px;
+    margin: 5px 40px;
+    margin-left: auto;
     font-size: 20px;
+    font-family: 'Paytone One', sans-serif;
 `;
 export default RandomQuote;

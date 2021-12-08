@@ -230,14 +230,8 @@ const createNewUser = async (req, res) => {
         else if (!email.includes("@")) {
             return res.status(400).json({ status: 400, message: "Please provide valid email" });
         }
-        else if (typeof age !== "number") {
-            return res.status(400).json({ status: 400, message: "Age is not a number" });
-        }
         else if (!gender) {
             return res.status(400).json({ status: 400, message: "Please select a gender" });
-        }
-        else if (typeof weight !== "number") {
-            return res.status(400).json({ status: 400, message: "Please provide your weight in kg/lb" });
         }
         
         // Creates new _id for user
@@ -498,6 +492,69 @@ const deleteWorkout = async (req, res) => {
     }
 };
 
+const addToWorkouts = async (req, res) => {
+
+    const client = new MongoClient(MONGO_URI, options);
+
+    try {
+
+        await client.connect();
+
+        const db = client.db("MakeSweat");
+        
+        const { workoutId, exerciseId, description } = req.body;
+
+        //updating the array of user's workouts
+        const query = { "_id": workoutId }
+
+        const newValues = { $push: { "exercises": {"exerciseId": exerciseId, "description": description} }};
+
+        const result = await db.collection("workouts").updateOne(query, newValues);
+
+        result
+            ? res.status(201).json({ status: 201, message: "Exercise was added to your workout" })
+            : res.status(400).json({ status: 400, message: "Something went wrong! Please provide valid data!" });
+    }
+    catch (error) {
+        console.log(error, "error")
+        res.status(500).json({ status: 500, message: "Something went wrong...", error });
+    }
+    finally {
+        client.close();
+    }
+};
+
+const removeFromWorkouts = async (req, res) => {
+
+    const client = new MongoClient(MONGO_URI, options);
+    
+    try {
+        await client.connect();
+        
+        const db = client.db("MakeSweat");
+
+        const { workoutId, exerciseId, description } = req.body;
+
+        //updating the array of user's workouts
+        const query = { "_id": workoutId,  }
+
+        const newValues = { $pull: { "exercises": {"exerciseId": exerciseId, "description": description} }};
+
+        const result = await db.collection("workouts").updateOne(query, newValues);
+
+        result 
+            ? res.status(204).json({ status: 204, message: "Exercise is deleted successfully" })
+            : res.status(404).json({ status: 404, message: "Exercise is not found" });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ status: 500, data: err.message });
+    }
+    finally {
+        client.close();
+    }
+};
+
 const addToFavorite = async (req, res) => {
 
     const client = new MongoClient(MONGO_URI, options);
@@ -605,6 +662,8 @@ module.exports = {
     getAllWorkouts,
     // updateWorkout, 
     deleteWorkout,
+    addToWorkouts, 
+    removeFromWorkouts,
     addToFavorite,
     removeFromFavorite,
     getMotivatingQuote

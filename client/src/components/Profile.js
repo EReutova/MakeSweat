@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-const LogIn = () => {
+const Profile = () => {
     return(
         <Wrapper>
-            LogIn
+            Profile
         </Wrapper>
     )
 }
 const Wrapper = styled.div``;
-export default LogIn;
+export default Profile;

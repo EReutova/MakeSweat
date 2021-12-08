@@ -8,7 +8,7 @@ import HomePage from "./components/HomePage";
 import Account from "./components/Account";
 import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
-import SignOut from "./components/SignOut";
+import Profile from "./components/Profile";
 import ExerciseDetails from "./components/ExerciseDetails";
 import Footer from "./components/Footer";
 
@@ -16,32 +16,37 @@ function App() {
 	
 	return (
 		<BrowserRouter>
-			<NavBar />
 			<GlobalStyles />
             <Wrapper>
 
                 <Switch>
                     <Route exact path="/">
+                        <NavBar />
                         <HomePage />
                     </Route>
                     
                     <Route path="/account/:_id">
+                        <NavBar />
                         <Account />
                     </Route>
 
                     <Route path="/login">
+                        <NavBar />
                         <LogIn />
                     </Route>
 
                     <Route path="/signup">
+                        <NavBar />
                         <SignUp />
                     </Route>
 
-                    <Route path="/signout">
-                        <SignOut />
+                    <Route path="/profile">
+                        <NavBar />
+                        <Profile />
                     </Route>
 
                     <Route path="/exercise-details/:id">
+                        <NavBar />
                         <ExerciseDetails />
                     </Route>
                 </Switch>

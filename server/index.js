@@ -18,6 +18,8 @@ const {
     getWorkout,
     getAllWorkouts,
     // updateWorkout, 
+    addToWorkouts, 
+    removeFromWorkouts,
     deleteWorkout,
     addToFavorite,
     removeFromFavorite,
@@ -82,6 +84,12 @@ express()
 
     // delete workout 
     .delete("/workout/:_id", deleteWorkout)
+
+    //add exercise to workout
+    .post("/add-to-workout", addToWorkouts)
+
+    //remove exercise from workout
+    .delete("/remove-from-workout", removeFromWorkouts)
 
     //add exercise in favorites
     .post("/add-favorite", addToFavorite)

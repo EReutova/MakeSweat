@@ -16,7 +16,7 @@ const ExerciseCard = ({exercise}) => {
         <>
         {
             exercise && 
-            <Wrapper key={exercise.id} onClick={(ev) => handleToDetails(exercise.id, ev)}>
+            <Wrapper onClick={(ev) => handleToDetails(exercise.id, ev)}>
                 
                 <Img src={exercise.gifUrl}/>
                 <Head>{exercise.name}</Head>
@@ -48,6 +48,7 @@ const Img = styled.img`
 const Head = styled.h3`
     font-size: 22px;
     text-align: center;
+    text-transform: uppercase;
 `;
 
 

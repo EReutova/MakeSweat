@@ -1,8 +1,13 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
+
+import { UserContext } from "./UserContext";
 
 export const ExercisesContext = createContext(null);
 
 export const ExercisesProvider = ({ children }) => {
+
+    const { reRender } = useContext(UserContext);
+
     //variable to store data from fetch "/exercises"
     const [exercises, setExercises] = useState([]);
 
@@ -26,7 +31,7 @@ export const ExercisesProvider = ({ children }) => {
         .catch((err) => {
             console.log("error");
         });
-    }, [start]);
+    }, [start, reRender]);
     
     return (
         <ExercisesContext.Provider value={{

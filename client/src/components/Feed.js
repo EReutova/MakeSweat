@@ -18,7 +18,11 @@ const Feed = () => {
                 {
                     exercises.length !== 0 && 
                     exercises.map((exercise)=> {
-                        return <ExerciseCard exercise={exercise}/>
+                        return (
+                                <div key={exercise.id}>
+                                    <ExerciseCard exercise={exercise}/>
+                                </div>
+                            )
                     })
                 }
             </Div>

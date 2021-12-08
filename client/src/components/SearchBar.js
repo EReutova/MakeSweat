@@ -15,13 +15,18 @@ const SearchBar = () => {
 
     return(
         <label>
-            <Input placeholder="Search" onChange={handleInput}/>
+            <Input 
+                value={inputValue}
+                placeholder="Search" 
+                onChange={handleInput}
+            />
         </label>
     )
 }
 
 const Input = styled.input`
-    background: var(--color-silver);
+    background: var(--color-platinum);
+    font-weight: 700;
     border: none;
     padding: 10px;
     width: 300px;

@@ -8,7 +8,7 @@ import { UserContext } from "./UserContext";
 // import { calculateAge } from "./CalculateAge";
 
 const SignUp = () => {
-    const { currentUser, setCurrentUser, reRender, setReRender} = useContext(UserContext);
+    const { userId, setUserId, reRender, setReRender} = useContext(UserContext);
     console.log(reRender);
 
     const history = useHistory()
@@ -225,7 +225,6 @@ const Label = styled.label`
 `;
 const Input = styled.input`
     padding: 10px;
-
     border: none;
     border-radius: 5px;
     width: 500px;

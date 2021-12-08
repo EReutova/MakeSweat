@@ -10,7 +10,7 @@ import Btn from "./Btn";
 const ExerciseDetails = () => {
     const { id } = useParams();
 
-    const { workouts, currentUser } = useContext(UserContext);
+    const { workouts, userId } = useContext(UserContext);
 
     //variable to store fetch result
     const [exercise, setExercise] = useState(null);
@@ -32,7 +32,7 @@ const ExerciseDetails = () => {
     }, [id]);
 
     const handleAddToWorkout = () => {
-        if (currentUser){
+        if (userId){
             //will push Id of Exercise to the "workout" array
         }
         else{
@@ -41,7 +41,7 @@ const ExerciseDetails = () => {
     }
 
     const handleAddToFavorite = () => {
-        if (currentUser){
+        if (userId){
             //will push Id of Exercise to the "favorites" array
         }
         else{

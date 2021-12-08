@@ -16,7 +16,7 @@ import { UserContext } from "./UserContext";
 const NavBar = () => {
     const history = useHistory();
 
-    const { currentUser, setCurrentUser, reRender } = useContext(UserContext);
+    const { userId, setUserId, reRender } = useContext(UserContext);
 
     const handleToHomePage = () => {
         history.push("/");
@@ -32,7 +32,7 @@ const NavBar = () => {
 
     const handleLogOut = () => {
         sessionStorage.removeItem("current-user");
-        setCurrentUser(null);
+        setUserId(null);
     }
 
     const handleToProfile = () => {
@@ -43,7 +43,7 @@ const NavBar = () => {
             <ImgLogo src={Logo} onClick={handleToHomePage}/>
             <SearchBar />
             {
-                currentUser === null ? (
+                userId === null ? (
                     <Div>
                         <Button onClick={handleToSignIn}>
                             <User/>
@@ -77,7 +77,7 @@ const Wrapper = styled.div`
 	z-index: 200;
 `;
 const ImgLogo = styled.img`
-    height: 85px;
+    height: 80px;
     margin: 10px 20px;
     margin-right: auto;
     cursor: pointer;

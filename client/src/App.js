@@ -5,6 +5,7 @@ import styled from "styled-components";
 import GlobalStyles from "./GlobalStyles";
 import NavBar from "./components/NavBar";
 import HomePage from "./components/HomePage";
+import Feed from "./components/Feed";
 import Account from "./components/Account";
 import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
@@ -23,6 +24,11 @@ function App() {
                     <Route exact path="/">
                         <NavBar />
                         <HomePage />
+                    </Route>
+
+                    <Route exact path="/feed">
+                        <NavBar />
+                        <Feed />
                     </Route>
                     
                     <Route path="/account/:_id">

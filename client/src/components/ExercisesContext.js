@@ -6,7 +6,7 @@ export const ExercisesContext = createContext(null);
 
 export const ExercisesProvider = ({ children }) => {
 
-    const { reRender } = useContext(UserContext);
+    const { reRender, userId } = useContext(UserContext);
 
     //variable to store data from fetch "/exercises"
     const [exercises, setExercises] = useState([]);
@@ -18,10 +18,6 @@ export const ExercisesProvider = ({ children }) => {
     //variable to hold the search input value
     const [inputValue, setInputValue] = useState("");
 
-    const [exercisesById, setExercisesById] = useState({});
-
-    const [exercisesByEquipmentType, setExercisesByEquipmentType] = useState({});
-
     useEffect(() => {
         fetch(`/exercises?searchRequest=${inputValue}&start=${start}&limit=${limit}`)
         .then(res => res.json())
@@ -31,7 +27,7 @@ export const ExercisesProvider = ({ children }) => {
         .catch((err) => {
             console.log("error");
         });
-    }, [start, reRender]);
+    }, [start, userId]);
     
     return (
         <ExercisesContext.Provider value={{

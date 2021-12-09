@@ -23,7 +23,8 @@ const {
     deleteWorkout,
     addToFavorite,
     removeFromFavorite,
-    getMotivatingQuote
+    getMotivatingQuote,
+    handleLogIn
 } = require("./handlers")
 
 
@@ -37,10 +38,10 @@ express()
     // ---------------------------------
     // All the encpoints are here 👇
 
-    // get all exercises
+    // get all exercises USED
     .get("/exercises", getAllExercises)
 
-    // get exercise by id
+    // get exercise by id USED
     .get("/exercise/:id", getExerciseById)
 
     // get exercise by name
@@ -58,10 +59,10 @@ express()
     // get filtered exercises
     // .get("/search/:equipment/:target/:bodyPart", getFilteredExercise)
 
-    // create a new user
+    // create a new user USED
     .post("/create/user", createNewUser)
 
-    // get user by id 
+    // get user by id USED
     .get("/user/:_id", getUserById)
 
     // update a user
@@ -70,10 +71,10 @@ express()
     // delete a user
     .delete("/user/:_id", deleteUser)
 
-    // create a new workout 
+    // create a new workout USED
     .post("/create/workout", createNewWorkout)
 
-    // get a workout 
+    // get a workout USED
     .get("/workout/:_id", getWorkout)
 
     //get all workouts
@@ -97,8 +98,11 @@ express()
     //remove exercise from favorites
     .delete("/remove-favorite", removeFromFavorite)
 
-    // get random motivating quote
+    // get random motivating quote USED
     .get("/motivating-quote", getMotivatingQuote)
+
+    //endpoint for log in USED
+    .post("/login", handleLogIn)
 
     // this is our catch all endpoint.
     .get("*", (req, res) => {

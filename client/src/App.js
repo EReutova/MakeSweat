@@ -6,11 +6,12 @@ import GlobalStyles from "./GlobalStyles";
 import NavBar from "./components/NavBar";
 import HomePage from "./components/HomePage";
 import Feed from "./components/Feed";
-import Account from "./components/Account";
 import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
 import ExerciseDetails from "./components/ExerciseDetails";
+import Favorites from "./components/Favorites";
+import WorkoutDetails from "./components/WorkoutDetails"
 import Footer from "./components/Footer";
 
 function App() {
@@ -29,11 +30,6 @@ function App() {
                     <Route exact path="/feed">
                         <NavBar />
                         <Feed />
-                    </Route>
-                    
-                    <Route path="/account/:_id">
-                        <NavBar />
-                        <Account />
                     </Route>
 
                     <Route path="/login">
@@ -55,9 +51,20 @@ function App() {
                         <NavBar />
                         <ExerciseDetails />
                     </Route>
+
+                    <Route path="/favorites">
+                        <NavBar />
+                        <Favorites />
+                    </Route>
+
+                    <Route path="/workout/:id">
+                        <NavBar />
+                        <WorkoutDetails />
+                    </Route>
+
                 </Switch>
 
-                <Footer />
+                {/* <Footer /> */}
             </Wrapper>
 		</BrowserRouter>
 	);

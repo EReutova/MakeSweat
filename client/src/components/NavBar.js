@@ -33,6 +33,7 @@ const NavBar = () => {
     const handleLogOut = () => {
         sessionStorage.removeItem("current-user");
         setUserId(null);
+        history.push("/");
     }
 
     const handleToProfile = () => {

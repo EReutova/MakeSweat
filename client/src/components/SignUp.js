@@ -9,7 +9,6 @@ import { UserContext } from "./UserContext";
 
 const SignUp = () => {
     const { userId, setUserId, reRender, setReRender} = useContext(UserContext);
-    console.log(reRender);
 
     const history = useHistory()
 
@@ -42,7 +41,7 @@ const SignUp = () => {
                 age: obj.age,
                 gender: obj.gender,
                 weight: obj.weight,
-                email: obj.email,
+                email: obj.email.toLowerCase(),
                 password: obj.password,
                 workouts: [],
                 favorites: [],

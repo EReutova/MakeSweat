@@ -25,7 +25,7 @@ export const ExercisesProvider = ({ children }) => {
             setExercises([...exercises, ...data.data])
         })
         .catch((err) => {
-            console.log("error");
+            console.log(err);
         });
     }, [start, userId]);
     

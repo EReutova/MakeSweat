@@ -12,6 +12,7 @@ const ExerciseCard = ({exercise}) => {
         ev.stopPropagation()
         history.push(`/exercise-details/${id}`);
     }
+    
     return(
         <>
         {

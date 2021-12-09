@@ -16,14 +16,16 @@ export const UserProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
-        fetch(`/user/${userId}`)
-        .then(res => res.json())
-        .then(data => {
-            setCurrentUser(data.result)
-        })
-        .catch((err) => {
-            console.log("error");
-        });
+        if (userId !== null){
+            fetch(`/user/${userId}`)
+            .then(res => res.json())
+            .then(data => {
+                setCurrentUser(data.result)
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        }
     }, [reRender]);
 
     return (

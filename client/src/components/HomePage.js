@@ -14,10 +14,10 @@ const HomePage = () => {
             <Main>
                 <Wrapper>
                     <Img src={Title}/>
-                    <p>Welcome to MakeSweat! I'm gonna help you to built an ideal workout that matches your needs and requirements. Over 1300 exercises </p>
+                    {/* <p>Welcome to MakeSweat! I'm gonna help you to built an ideal workout that matches your needs and requirements. Over 1300 exercises </p> */}
                 </Wrapper>
             </Main>
-                    {/* <Feed /> */}
+                    <Feed />
         </>
     )
 }

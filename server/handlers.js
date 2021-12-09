@@ -381,7 +381,7 @@ const createNewWorkout = async (req, res) => {
         //updating the array of user's workouts
         const query = { _id: newWorkout.userId }
 
-        const newValues = { $push: { workouts:  _id }};
+        const newValues = { $push: { workouts:  newWorkout }};
 
         const workoutsUpdated = await db.collection("users").updateOne(query, newValues);
 
@@ -447,7 +447,6 @@ const getAllWorkouts = async (req, res) => {
     }
 
     finally {
-        // TODO: close...
         client.close();
     }
 };
@@ -471,7 +470,7 @@ const deleteWorkout = async (req, res) => {
 
         const query = { _id: workoutToDelete.userId}
         
-        const newValues = { $pull: { "workouts": _id }};
+        const newValues = { $pull: { "workouts": {"_id": _id} }};
         
         //updating the array of user's workouts - removing one
         const workoutsUpdated = await db.collection("users").updateOne(query, newValues);
@@ -513,7 +512,7 @@ const addToWorkouts = async (req, res) => {
 
         result
             ? res.status(201).json({ status: 201, message: "Exercise was added to your workout" })
-            : res.status(400).json({ status: 400, message: "Something went wrong! Please provide valid data!" });
+            : res.status(400).json({ status: 400, message: "Something went wrong! Try again!" });
     }
     catch (error) {
         console.log(error, "error")
@@ -565,18 +564,41 @@ const addToFavorite = async (req, res) => {
 
         const db = client.db("MakeSweat");
         
-        const { userId, exerciseId } = req.body;
+        const { 
+            userId,  
+            bodyPart,
+            equipment,
+            gifUrl,
+            id,
+            name,
+            target,
+            description } = req.body;
 
-        //updating the array of user's workouts
-        const query = { "_id": userId }
+        // find user who's favorites we update
+        const userToUpdate = await db.collection("users").findOne({_id: userId});
 
-        const newValues = { $addToSet: { "favorites": exerciseId }};
+        //check is exercise is already in the favorites
+        let findExercise = userToUpdate.favorites.find((exercise)=> {
+            return exercise.id === id;
+        })
 
-        const result = await db.collection("users").updateOne(query, newValues);
+        //if exercise was found in user's favorites - give error
+        if (findExercise){
+            res.status(400).json({ status: 400, message: "Exercise is already in your favorites" })
+        }
 
-        result
-            ? res.status(201).json({ status: 201, message: "Exercise was added to favorite" })
-            : res.status(400).json({ status: 400, message: "Something went wrong! Please provide valid data!" });
+        //if not - update the array of user's favorites
+        else{
+            const query = { "_id": userId }
+    
+            const newValues = { $addToSet: { "favorites": {bodyPart, equipment, gifUrl, id, name, target, description}  }};
+    
+            const result = await db.collection("users").updateOne(query, newValues);
+    
+            result
+                ? res.status(201).json({ status: 201, message: "Exercise was added to favorite" })
+                : res.status(400).json({ status: 400, message: "Something went wrong! Try again!" });
+        }
     }
     catch (error) {
         console.log(error, "error")
@@ -645,6 +667,44 @@ const getMotivatingQuote = async (req, res) => {
     }
 }
 
+const handleLogIn = async (req, res) => {
+
+    const client = new MongoClient(MONGO_URI, options);
+
+    try {
+        await client.connect();
+
+        const db = client.db("MakeSweat");
+
+        const { userEmail, userPassword } = req.body;
+
+        console.log(req.body)
+        //findint in DB email of user that tries to sign in
+        const user = await db.collection("users").findOne({ email: userEmail });
+        
+        if (!user){
+            // if email was not found
+            return res.status(400).json({ status: 400, message: "User was not found!" })
+        }
+        else if (user.password !== userPassword){
+            // if tha password is not matching
+            return res.status(400).json({ status: 400, message: "Password is incorrect!" })
+        }
+        else {
+            //Succsess
+            res.status(200).json({ status: 200, user, message: "You were successfully logged in!" })
+        }
+    } 
+    
+    catch (error) {
+        res.status(500).json({ status: 500, message: "Something went wrong..." });
+    }
+
+    finally {
+        client.close();
+    }
+};
+
 module.exports = {
     getAllExercises,
     getExerciseById,
@@ -666,6 +726,7 @@ module.exports = {
     removeFromWorkouts,
     addToFavorite,
     removeFromFavorite,
-    getMotivatingQuote
+    getMotivatingQuote, 
+    handleLogIn
 };
 

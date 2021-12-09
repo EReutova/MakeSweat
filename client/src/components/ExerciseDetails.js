@@ -10,7 +10,7 @@ import Btn from "./Btn";
 const ExerciseDetails = () => {
     const { id } = useParams();
 
-    const { workouts, userId } = useContext(UserContext);
+    const { userId, currentUser } = useContext(UserContext);
 
     //variable to store fetch result
     const [exercise, setExercise] = useState(null);
@@ -18,34 +18,127 @@ const ExerciseDetails = () => {
     //variable to store text area input
     const [description, setDescripton] = useState(null);
 
+    //variable to hold BE message
+    const [message, setMessage] = useState(null);
+
+    //variable to hold errors
+    const [error, setError] = useState(null);
+
+    //variable to display list of user's workouts for "Add to workout"
+    const [displaySelectWorkout, setDisplaySelectWorkout] = useState(false);
+
+    //variable to hold workout id that is being selected for "Add To Workout"
+    const [workoutId, setWorkoutId] = useState(null)
+
+    //fetch for exercise id
+    useEffect(() => {
+        fetch(`/exercise/${id}`)
+        .then((res) => res.json())
+        .then((data) => setExercise(data.data))
+        .catch((err) => {
+            console.log(err);
+        });
+    }, [id]);
+    
+    //function that sets text area value(as 'description')
     const handleTextAreaInput = (ev) => {
         setDescripton(ev.target.value);
     }
 
-    useEffect(() => {
-        fetch(`/exercise/${id}`)
-            .then((res) => res.json())
-            .then((data) => setExercise(data.data))
-            .catch((err) => {
-                console.log("error");
-            });
-    }, [id]);
+    // Once you click on "Add to workout" it does few things:
+    //1. Sets 'message' and 'error' to null(in case they were displayed). 
+    // This will hide them, because they are being displayed only if value !== null
+    //2. Sets "displaySelectWorkout" to "true" to render options
+    const handleSelectWorkout = (ev) => {
+        ev.preventDefault();
+        setMessage(null);
+        setError(null);
+        setDisplaySelectWorkout(true);
+    }
 
-    const handleAddToWorkout = () => {
-        if (userId){
-            //will push Id of Exercise to the "workout" array
+    // function that saves current exercise in the selected workout
+    const addToWorkout = (ev, workoutId) => {
+        ev.preventDefault();
+        console.log("add TWO")
+        //do fetch only if user is logged in  
+        if (userId) {
+            fetch("/add-to-workout", {
+                method: "POST",
+                body: JSON.stringify({
+                    workoutId: workoutId, 
+                    exerciseId: exercise.id, 
+                    description: description
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            .then((res) => res.json())
+            .then((json) => {
+                if (json.status === 201){
+                    setDisplaySelectWorkout(false);
+                    setMessage(json.message);
+                }
+                else{
+                    setDisplaySelectWorkout(false);
+                    setError(json.message);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
         }
+
+        //if user doesn't have any workouts
+        else if(workoutId === null){
+            setError("Please create a workout!")
+        }
+
+        //if user is not logged in
         else{
-            window.alert("Please log in and create a workout")
+            setError("Please login!")
         }
     }
 
-    const handleAddToFavorite = () => {
+    // function that saves exercise in user's 'favorites'
+    const handleAddToFavorite = (ev) => {
+        ev.preventDefault();
+
+        //do fetch only if user is logged in 
         if (userId){
-            //will push Id of Exercise to the "favorites" array
+            fetch("/add-favorite", {
+                method: "POST",
+                body: JSON.stringify({
+                    userId: userId,  
+                    bodyPart: exercise.bodyPart,
+                    equipment: exercise.equipment,
+                    gifUrl: exercise.gifUrl,
+                    id: exercise.id,
+                    name: exercise.name,
+                    target: exercise.target,
+                    description: description,
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            .then((res) => res.json())
+            .then((json) => {
+                if (json.status === 201){
+                    setMessage(json.message)
+                }
+                else{
+                    setError(json.message)
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })    
         }
+        
+        //if user is not logged in
         else{
-            window.alert("Please log in")
+            setError("Please login")
         }
     }
 
@@ -58,23 +151,68 @@ const ExerciseDetails = () => {
                     <Wrapper>
                         <Img src={exercise.gifUrl}/>
                         <Info>
-                            <H3>{exercise.name}</H3>
-                            <Par>Body part: {exercise.bodyPart}</Par>
-                            <Par>Equipment: {exercise.equipment}</Par>
-                            <Par>Target: {exercise.target}</Par>
-                            <Divv>
-                                <p>Enter description</p>
-                                <TextArea 
-                                    value={description}
-                                    onChange={handleTextAreaInput}
-                                    placeholder="Such as 30 repetitions, 3 times" 
-                                    multiline 
-                                    rows={4}/>
-                                    <Div>
-                                        <Button onClick={handleAddToWorkout}>Add to favorites</Button>
-                                        <Btn onClick={handleAddToFavorite}>Add to workout</Btn>
-                                    </Div>
-                            </Divv>
+
+                            {/* displaying this piece by default when component mounts */}
+                            {
+                                displaySelectWorkout === false &&
+                                    <>
+                                        <H3>{exercise.name}</H3>
+                                        <Par>Body part: {exercise.bodyPart}</Par>
+                                        <Par>Equipment: {exercise.equipment}</Par>
+                                        <Par>Target: {exercise.target}</Par>
+                                        <Divv>
+                                            <p>Enter description</p>
+                                            <TextArea 
+                                                value={description}
+                                                onChange={handleTextAreaInput}
+                                                placeholder="Such as 30 repetitions, 3 times" 
+                                                multiline 
+                                                rows={2}
+                                            />
+                                        </Divv>
+                                    </>
+                            }
+
+                            {/* for Message of success from BE rendering */}
+                            {
+                                message !==null &&
+                                <Message>{message}</Message>
+                            }
+                            
+                            {/* for Error  from BE rendering */}
+                            {
+                                error !==null &&
+                                <Error>{error}</Error>
+                            }
+
+
+                            {/* displaying this piece of code only when adding exercise to workouts*/}
+                            {
+                                displaySelectWorkout === true && currentUser &&
+                                <Form onSubmit={addToWorkout}>
+                                    <Label>
+                                        {
+                                            currentUser?.workouts.map((workout) => {
+                                                <Select 
+                                                    required 
+                                                    value={workout._id}
+                                                    onChange={(ev)=> setWorkoutId(ev.target.value)} 
+                                                    defaultValue="Select workout"
+                                                >
+                                                    <option disabled>Select workout</option>
+                                                    <option>{workout.name}</option>
+                                                </Select>
+                                            })
+                                        }
+                                    </Label>
+                                    <Btn type="submit">add</Btn>
+                                </Form>
+                            }
+
+                            <Div>
+                                <Button onClick={(ev)=>handleAddToFavorite(ev)}>Add to favorites</Button>
+                                <Btn onClick={(ev)=>handleSelectWorkout(ev)}>Add to workout</Btn>
+                            </Div>
                         </Info>
                     </Wrapper>
                 )
@@ -92,6 +230,8 @@ const Wrapper = styled.div`
     color: #fff;
     display: flex;
     justify-content: center;
+    border-radius: 10px;
+    box-shadow: -2px 2px 10px 5px #cacaca;
 `;
 const Img = styled.img`
     margin: auto;
@@ -103,6 +243,8 @@ const Img = styled.img`
 const Info = styled.div`
     padding: 30px;
     flex: 1;
+    height: 100%;
+    position: relative;
 `;
 const H3 = styled.h3`
     margin: 10px;
@@ -126,9 +268,38 @@ const TextArea = styled.textarea`
     font-size: 26px;
     resize: none;
 `;
+const Message = styled.p`
+    padding: 10px;
+    margin: 20px 0;
+    font-size: 26px;
+    text-align: center;
+    color: #2fd9bc;
+    border: 2px solid #2fd9bc;
+    border-radius: 5px;
+`;
+const Error = styled(Message)`
+    color: var(--color-red-crayola);
+    border: 2px solid var(--color-red-crayola);
+`;
 const Div = styled.div`
     display: flex;
     justify-content: space-between;
-    margin-top: 90px;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+`;
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+`;
+const Label = styled.label`
+    margin: 5px;
+`;
+const Select = styled.select`
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    width: 500px;
 `;
 export default ExerciseDetails;

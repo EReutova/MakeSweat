@@ -55,6 +55,7 @@ const Img = styled.img`
     padding: 20px;
 `;
 const Div = styled.div`
+    width: 45%;
     padding: 20px;
     display: flex;
     flex-direction: column;

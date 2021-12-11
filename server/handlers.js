@@ -214,15 +214,22 @@ const createNewUser = async (req, res) => {
 
     const client = new MongoClient(MONGO_URI, options);
 
+    //generating random password
+    let number = Math.round(Math.random()*10);
+    const nouns = ["team", "dirt", "wilderness", "noise", "cover", "laborer", "waste", "scarf", "friction", "jar", "impulse", "truck", "trains", "teaching", "base", "chicken", "quilt", "wing", "queen", "word", "vegetable", "floor", "wren", "pin"];
+    let randomNounOne = nouns[Math.floor(Math.random() * nouns.length)];
+    let randomNounTwo = nouns[Math.floor(Math.random() * nouns.length)];
+    let randomNounThree = nouns[Math.floor(Math.random() * nouns.length)];
+    let randomNounFour = nouns[Math.floor(Math.random() * nouns.length)];
+    let randomPassword = `${randomNounOne}-${randomNounTwo}-${randomNounThree}-${randomNounFour}-${number}`;
+
     try {
 
         await client.connect();
 
         const db = client.db("MakeSweat");
         
-        const { name, email, age, gender, weight,
-            // avatar
-        } = req.body;
+        const { name, email, age, gender, weight, password, confirmation } = req.body;
         
         //Validation
         if (name.length <= 2) {
@@ -233,6 +240,21 @@ const createNewUser = async (req, res) => {
         }
         else if (!gender) {
             return res.status(400).json({ status: 400, message: "Please select a gender" });
+        }
+        else if (!age) {
+            return res.status(400).json({ status: 400, message: "Please enter your age" });
+        }
+        else if (!weight) {
+            return res.status(400).json({ status: 400, message: "Please enter your weight" });
+        }
+        else if (!password || !confirmation){
+            return res.status(400).json({ status: 400, message: "Please enter your password" });
+        }
+        else if (password.length < 10) {
+            return res.status(400).json({ status: 400, message: `Your password is too short! Try this ${randomPassword}`});
+        }
+        else if (password !== confirmation){
+            return res.status(400).json({ status: 400, message: `You password is not matching confirmation!`});
         }
         
         // Creates new _id for user

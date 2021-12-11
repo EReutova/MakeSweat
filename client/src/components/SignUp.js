@@ -19,7 +19,7 @@ const SignUp = () => {
         gender: "",
         weight: "",
         email: "",
-        password: "",
+        password: ""
     }
 
     //variable that holds data from form

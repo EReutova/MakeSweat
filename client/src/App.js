@@ -47,7 +47,7 @@ function App() {
                         <Profile />
                     </Route>
 
-                    <Route path="/exercise-details/:id">
+                    <Route path="/exercise-details/:_id">
                         <NavBar />
                         <ExerciseDetails />
                     </Route>

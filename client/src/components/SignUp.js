@@ -31,6 +31,9 @@ const SignUp = () => {
     //variable that temporary holds confirmation of password
     const[confPass, setConfPass] = useState(null);
 
+    //variable to hold errors
+    const [error, setError] = useState(null);
+
     const createUser = (obj) => {
         //obj is used to send data to BE
 
@@ -54,11 +57,12 @@ const SignUp = () => {
         .then((json) => {
             //setting up id of user that is being created in local storage
             sessionStorage.setItem("current-user", JSON.stringify(json._id));
+            setUserId(json._id)
             setReRender(!reRender);
             history.push("/");
         })
         .catch((err) => {
-            console.log(err, "error");
+            console.log(err);
         })
     }
 
@@ -89,10 +93,10 @@ const SignUp = () => {
             
             //password validation
             if (pass.length < 10){
-                window.alert("Your password is too short! " + "Try this " + randomPassword)
+                setError("Your password is too short! " + "Try this " + randomPassword)
             }
             else if (pass !== confPass) {
-                window.alert("You password is not matching confirmation!")
+                setError("You password is not matching confirmation!")
             }
             else{
                 setFormData({...formData, password: pass});
@@ -179,6 +183,10 @@ const SignUp = () => {
                     </Label>
 
                     <Button type="submit">Sign Up</Button>
+                    {
+                        error !== null &&
+                        <Error>{error}</Error>
+                    }
                 </Form>
                 
             </Wrapper>
@@ -241,6 +249,16 @@ const Span = styled.span`
 const Select = styled.select`
     padding: 10px;
     border: none;
+    border-radius: 5px;
+    width: 500px;
+`;
+const Error = styled.p`
+    padding: 10px;
+    margin: 20px 0;
+    font-size: 26px;
+    text-align: center;
+    color: var(--color-red-crayola);
+    border: 2px solid var(--color-red-crayola);
     border-radius: 5px;
     width: 500px;
 `;

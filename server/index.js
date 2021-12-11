@@ -2,9 +2,32 @@
 
 const express = require("express");
 const morgan = require("morgan");
+
+// Importing handlers
+const { getAllExercises } = require("./handlers/getAllExercises");
+const { getExerciseById } = require("./handlers/getExerciseById");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+// const {  } = require("./handlers/");
+
+
 const { 
-    getAllExercises, 
-    getExerciseById, 
+    // getAllExercises, 
+    // getExerciseById, 
     getExerciseByName, 
     getExerciseByEquipmentType, 
     getExerciseByTarget, 
@@ -17,7 +40,7 @@ const {
     createNewWorkout, 
     getWorkout,
     getAllWorkouts,
-    // updateWorkout, 
+    updateWorkout, 
     addToWorkouts, 
     removeFromWorkouts,
     deleteWorkout,
@@ -42,7 +65,7 @@ express()
     .get("/exercises", getAllExercises)
 
     // get exercise by id USED
-    .get("/exercise/:id", getExerciseById)
+    .get("/exercise/:_id", getExerciseById)
 
     // get exercise by name
     .get("/exercises/name/:name", getExerciseByName)
@@ -81,21 +104,21 @@ express()
     .get("/workouts", getAllWorkouts)
 
     // update a workout ???? need help with it
-    // .patch("/workout/:_id", updateWorkout)
+    .patch("/workout/:_id", updateWorkout)
 
-    // delete workout 
+    // delete workout USED
     .delete("/workout/:_id", deleteWorkout)
 
-    //add exercise to workout
-    .post("/add-to-workout", addToWorkouts)
+    //add exercise to workout USED
+    .put("/add-to-workout", addToWorkouts)
 
-    //remove exercise from workout
+    //remove exercise from workout USED
     .delete("/remove-from-workout", removeFromWorkouts)
 
-    //add exercise in favorites
-    .post("/add-favorite", addToFavorite)
+    //add exercise in favorites USED
+    .put("/add-favorite", addToFavorite)
 
-    //remove exercise from favorites
+    //remove exercise from favorites USED
     .delete("/remove-favorite", removeFromFavorite)
 
     // get random motivating quote USED

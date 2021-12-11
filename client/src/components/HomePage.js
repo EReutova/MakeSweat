@@ -14,10 +14,22 @@ const HomePage = () => {
             <Main>
                 <Wrapper>
                     <Img src={Title}/>
-                    {/* <p>Welcome to MakeSweat! I'm gonna help you to built an ideal workout that matches your needs and requirements. Over 1300 exercises </p> */}
+                    <Div>
+                        <Head>Welcome to MakeSweat!</Head> 
+                        <Par>I'm an app that will help you to built your perfect body!</Par>
+                        <Par>Access the library of over 1300+ exercises!</Par>
+                        <Par>Design any workout you can dream!</Par>
+                        <Par>Or simply choose one of our ready to use workouts!</Par>
+{/* 1.
+View Available Workouts
+2.
+Get started Start a Workout
+3.
+Browse exercises */}
+                    </Div>
                 </Wrapper>
             </Main>
-                    <Feed />
+            {/* <Feed /> */}
         </>
     )
 }
@@ -41,5 +53,21 @@ const Wrapper = styled.div`
 const Img = styled.img`
     width: 50%;
     padding: 20px;
+`;
+const Div = styled.div`
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+`;
+const Head = styled.h3`
+    font-size: 30px;
+    text-align: center;
+    color: var(--color-red-crayola);
+    margin: 10px;
+`;
+const Par = styled.p`
+    font-size: 24px;
+    margin: 5px;
 `;
 export default HomePage;

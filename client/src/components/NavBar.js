@@ -39,6 +39,7 @@ const NavBar = () => {
     const handleToProfile = () => {
         history.push("/profile");
     }
+    
     return(
         <Wrapper>
             <ImgLogo src={Logo} onClick={handleToHomePage}/>

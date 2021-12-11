@@ -42,12 +42,14 @@ const getAllExercises = async (req, res) => {
             let newResult;
 
             if (searchRequest) {
+                //*************************************** */
+                // let newSearch = searchRequest.split(" ")
                 newResult = result.filter((item) => {
                     return (
-                        item.bodyPart.includes(searchRequest) ||
-                        item.equipment.includes(searchRequest) ||
-                        item.name.includes(searchRequest) ||
-                        item.target.includes(searchRequest)
+                        item.bodyPart.toLowerCase().includes(searchRequest.toLowerCase()) ||
+                        item.equipment.toLowerCase().includes(searchRequest.toLowerCase()) ||
+                        item.name.toLowerCase().includes(searchRequest.toLowerCase()) ||
+                        item.target.toLowerCase().includes(searchRequest.toLowerCase())
                         )
                 }).slice(startNum, limitNum+startNum)
             }
@@ -60,7 +62,7 @@ const getAllExercises = async (req, res) => {
         });
     }
     catch (err) {
-        console.log(err.stack);
+        console.log(err);
         res.status(500).json({ status: 500, data: req.body, message: err.message })
     }
 };
@@ -85,11 +87,10 @@ const getExerciseById = async (req, res) => {
             result
                 ? res.status(200).json({ status: 200, data: result, message: "Success" })
                 : res.status(404).json({ status: 404, data: result, message: "Exercise is not found" });
-            console.log(result)
         });
     }
     catch (err) {
-        console.log(err.stack);
+        console.log(err);
         res.status(500).json({ status: 500, data: req.body, message: err.message })
     }
 };
@@ -117,7 +118,7 @@ const getExerciseByName = async (req, res) => {
         });
     }
     catch (err) {
-        console.log(err.stack);
+        console.log(err);
         res.status(500).json({ status: 500, data: req.body, message: err.message })
     }
 };
@@ -145,7 +146,7 @@ const getExerciseByEquipmentType = async (req, res) => {
         });
     }
     catch (err) {
-        console.log(err.stack);
+        console.log(err);
         res.status(500).json({ status: 500, data: req.body, message: err.message })
     }
 };
@@ -173,7 +174,7 @@ const getExerciseByTarget = async (req, res) => {
         });
     }
     catch (err) {
-        console.log(err.stack);
+        console.log(err);
         res.status(500).json({ status: 500, data: req.body, message: err.message })
     }
 };
@@ -201,7 +202,7 @@ const getExerciseByBodyPart = async (req, res) => {
         });
     }
     catch (err) {
-        console.log(err.stack);
+        console.log(err);
         res.status(500).json({ status: 500, data: req.body, message: err.message })
     }
 };
@@ -256,9 +257,9 @@ const createNewUser = async (req, res) => {
         }
 
     }
-    catch (error) {
-        console.log(error, "error")
-        res.status(500).json({ status: 500, message: "Something went wrong...", error });
+    catch (err) {
+        console.log(err)
+        res.status(500).json({ status: 500, message: err.message });
     }
     finally {
         client.close();
@@ -304,13 +305,11 @@ const updateUser = async (req, res) => {
         // TODO: declare 'db'
         const db = client.db("MakeSweat");
 
-        const { name, email, gender, weight,
-            // avatar
-        } = req.body;
+        const { name, email, age, weight, password } = req.body;
 
         const query = { _id };
 
-        let newValues = { $set: { name: name, email: email, gender: gender, weight: weight } }
+        let newValues = { $set: { name: name, email: email, age: age, weight: weight, password: password } }
 
         //find a user according the _id and update according reseived changes
         const result = await db.collection("users").updateOne(query, newValues);
@@ -321,7 +320,7 @@ const updateUser = async (req, res) => {
     }
 
     catch (err) {
-        console.log(err.stack);
+        console.log(err);
         res.status(500).json({ status: 500, data: req.body, message: err.message })
     }
 
@@ -351,7 +350,7 @@ const deleteUser = async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        res.status(500).json({ status: 500, data: err.message });
+        res.status(500).json({ status: 500, message: err.message });
     }
     finally {
         client.close();
@@ -389,9 +388,9 @@ const createNewWorkout = async (req, res) => {
             ? res.status(201).json({ status: 201, _id, message: "Success! New workout was created!" })
             : res.status(400).json({ status: 400, message: "Something went wrong! Please provide valid data!" });
     }
-    catch (error) {
-        console.log(error, "error")
-        res.status(500).json({ status: 500, message: "Something went wrong...", error });
+    catch (err) {
+        console.log(err)
+        res.status(500).json({ status: 500, data: req.body, message: err.message });
     }
     finally {
         client.close();
@@ -408,7 +407,7 @@ const getWorkout = async (req, res) => {
         const db = client.db("MakeSweat");
 
         const { _id } = req.params;
-
+        
         const result = await db.collection("workouts").findOne({ _id });
 
         result
@@ -416,9 +415,9 @@ const getWorkout = async (req, res) => {
             : res.status(400).json({ staus: 400, message: "Workout is not found" });
 
     } 
-    catch (error) {
-        console.log(error, "error")
-        res.status(500).json({ status: 500, message: "Something went wrong...", error });
+    catch (err) {
+        console.log(err)
+        res.status(500).json({ status: 500, message: err.message });
     }
     finally {
         client.close();
@@ -451,8 +450,50 @@ const getAllWorkouts = async (req, res) => {
     }
 };
 
-//************* */
-// updateWorkout, 
+const updateWorkout = async (req, res) => {
+
+    const client = new MongoClient(MONGO_URI, options);
+
+    try {
+
+        await client.connect();
+
+        const db = client.db("MakeSweat");
+
+        const { _id } = req.params;
+
+        const { 
+            userId,
+            exerciseId, 
+            description, 
+        } = req.body;
+
+        //updating the array of workouts
+        const query = { "_id": _id, "exercises.exerciseId": exerciseId };
+
+        const newValues = { $set: { "exercises.$.description": description } };
+
+        const result = await db.collection("workouts").updateOne(query, newValues);
+
+        //updating the array of user's workouts
+        const userQuery = { "_id": userId, "workouts._id.exercises": exerciseId};
+
+        const userNewVal = { $set: { "exercises.$.description": description }};
+
+        const updatedUser = await db.collection("users").updateOne(userQuery, userNewVal);
+
+        result && updatedUser
+            ? res.status(200).json({ status: 200, message: "Description was added" })
+            : res.status(400).json({ status: 400, message: "Something went wrong! Try again!" });
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({ status: 500, data: req.body, message: err.message });
+    }
+    finally {
+        client.close();
+    }
+};
 
 const deleteWorkout = async (req, res) => {
 
@@ -478,9 +519,13 @@ const deleteWorkout = async (req, res) => {
         //deleting workout
         const result = await db.collection("workouts").deleteOne({ _id });
 
-        result && workoutsUpdated
-            ? res.status(204).json({ status: 204, message: "Workout is deleted successfully" })
-            : res.status(404).json({ status: 404, message: "Workout is not found" });
+        
+        if (result && workoutsUpdated){
+            res.status(204).json({ status: 204, message: "Workout is deleted successfully" })
+        }
+        else {
+            res.status(404).json({ status: 404, message: "Workout is not found" });
+        }
     }
     catch (err) {
         console.log(err);
@@ -501,22 +546,71 @@ const addToWorkouts = async (req, res) => {
 
         const db = client.db("MakeSweat");
         
-        const { workoutId, exerciseId, description } = req.body;
+        const { 
+            workoutId, 
+            exerciseId, 
+            description, 
+            userId, 
+            bodyPart,
+            equipment,
+            name,
+            target,
+            gifUrl
+        } = req.body;
 
-        //updating the array of user's workouts
-        const query = { "_id": workoutId }
+        //find the workout to update
+        const workoutToUpdate = await db.collection("workouts").findOne({_id: workoutId});
 
-        const newValues = { $push: { "exercises": {"exerciseId": exerciseId, "description": description} }};
+        //check if exercise is already in the workout
+        let findExercise = workoutToUpdate.exercises.find((exercise)=> {
+            return exercise.exerciseId === exerciseId
+        })
 
-        const result = await db.collection("workouts").updateOne(query, newValues);
+        //if exercise was found in exercise - give error
+        if (findExercise){
+            res.status(400).json({ status: 400, message: "Exercise is already in your workout" })
+        }
 
-        result
-            ? res.status(201).json({ status: 201, message: "Exercise was added to your workout" })
-            : res.status(400).json({ status: 400, message: "Something went wrong! Try again!" });
+        else{
+            //if not - updating the array of user's workouts
+            const query = { "_id": workoutId };
+    
+            const newValues = { $addToSet: { "exercises": {
+                "exerciseId": exerciseId, 
+                "description": description,  
+                "bodyPart": bodyPart,
+                "equipment": equipment,
+                "name": name,
+                "target": target,
+                "gifUrl": gifUrl
+            } }};
+
+            const result = await db.collection("workouts").updateOne(query, newValues);
+    
+            const userQuery = { "_id": userId, "workouts._id": workoutId};
+    
+            const userNewVal = { $push: { "workouts.$.exercises": {
+                "exerciseId": exerciseId, 
+                "description": description,  
+                "bodyPart": bodyPart,
+                "equipment": equipment,
+                "name": name,
+                "target": target,
+                "gifUrl": gifUrl
+            } }};
+
+            const updatedUser = await db.collection("users").updateOne(userQuery, userNewVal);
+    
+            result && updatedUser
+                ? res.status(201).json({ status: 201, message: "Exercise was added to your workout" })
+                : res.status(400).json({ status: 400, message: "Something went wrong! Try again!" });
+        }
+
+
     }
-    catch (error) {
-        console.log(error, "error")
-        res.status(500).json({ status: 500, message: "Something went wrong...", error });
+    catch (err) {
+        console.log(err)
+        res.status(500).json({ status: 500, data: req.body, message: err.message });
     }
     finally {
         client.close();
@@ -532,16 +626,24 @@ const removeFromWorkouts = async (req, res) => {
         
         const db = client.db("MakeSweat");
 
-        const { workoutId, exerciseId, description } = req.body;
+        const { userId, workoutId, exerciseId } = req.body;
 
-        //updating the array of user's workouts
-        const query = { "_id": workoutId,  }
+        //updating the array of workout's exercises
+        const query = { "_id": workoutId }
 
-        const newValues = { $pull: { "exercises": {"exerciseId": exerciseId, "description": description} }};
+        const newValues = { $pull: { "exercises": {"exerciseId": exerciseId} }};
 
         const result = await db.collection("workouts").updateOne(query, newValues);
 
-        result 
+
+        //updating the array of user's workouts
+        const userQuery = { "_id": userId, "workouts._id": workoutId};
+
+        const userNewVal = { $pull: { "workouts.$.exercises": {"exerciseId": exerciseId} }};
+
+        const updatedUser = await db.collection("users").updateOne(userQuery, userNewVal);
+
+        result && updatedUser
             ? res.status(204).json({ status: 204, message: "Exercise is deleted successfully" })
             : res.status(404).json({ status: 404, message: "Exercise is not found" });
     }
@@ -569,7 +671,7 @@ const addToFavorite = async (req, res) => {
             bodyPart,
             equipment,
             gifUrl,
-            id,
+            _id,
             name,
             target,
             description } = req.body;
@@ -577,9 +679,9 @@ const addToFavorite = async (req, res) => {
         // find user who's favorites we update
         const userToUpdate = await db.collection("users").findOne({_id: userId});
 
-        //check is exercise is already in the favorites
+        //check if exercise is already in the favorites
         let findExercise = userToUpdate.favorites.find((exercise)=> {
-            return exercise.id === id;
+            return exercise._id === _id;
         })
 
         //if exercise was found in user's favorites - give error
@@ -591,18 +693,18 @@ const addToFavorite = async (req, res) => {
         else{
             const query = { "_id": userId }
     
-            const newValues = { $addToSet: { "favorites": {bodyPart, equipment, gifUrl, id, name, target, description}  }};
+            const newValues = { $addToSet: { "favorites": {bodyPart, equipment, gifUrl, _id, name, target, description}  }};
     
             const result = await db.collection("users").updateOne(query, newValues);
     
             result
-                ? res.status(201).json({ status: 201, message: "Exercise was added to favorite" })
+                ? res.status(201).json({ status: 201, message: "Exercise was added to favorites" })
                 : res.status(400).json({ status: 400, message: "Something went wrong! Try again!" });
         }
     }
-    catch (error) {
-        console.log(error, "error")
-        res.status(500).json({ status: 500, message: "Something went wrong...", error });
+    catch (err) {
+        console.log(err)
+        res.status(500).json({ status: 500, data: req.body, message: err.message });
     }
     finally {
         client.close();
@@ -618,12 +720,12 @@ const removeFromFavorite = async (req, res) => {
         
         const db = client.db("MakeSweat");
 
-        const { userId, exerciseId } = req.body;
+        const { userId, _id } = req.body;
 
         //updating the array of user's workouts
         const query = { "_id": userId }
 
-        const newValues = { $pull: { "favorites": exerciseId }};
+        const newValues = { $pull: { "favorites": { "_id": _id } }}
 
         const result = await db.collection("users").updateOne(query, newValues);
 
@@ -633,7 +735,7 @@ const removeFromFavorite = async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        res.status(500).json({ status: 500, data: err.message });
+        res.status(500).json({ status: 500, data: req.body, message: err.message });
     }
     finally {
         client.close();
@@ -662,7 +764,7 @@ const getMotivatingQuote = async (req, res) => {
         });
     }
     catch (err) {
-        console.log(err.stack);
+        console.log(err);
         res.status(500).json({ status: 500, data: req.body, message: err.message })
     }
 }
@@ -678,7 +780,6 @@ const handleLogIn = async (req, res) => {
 
         const { userEmail, userPassword } = req.body;
 
-        console.log(req.body)
         //findint in DB email of user that tries to sign in
         const user = await db.collection("users").findOne({ email: userEmail });
         
@@ -720,7 +821,7 @@ module.exports = {
     createNewWorkout, 
     getWorkout,
     getAllWorkouts,
-    // updateWorkout, 
+    updateWorkout, 
     deleteWorkout,
     addToWorkouts, 
     removeFromWorkouts,

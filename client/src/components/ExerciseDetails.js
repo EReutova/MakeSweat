@@ -8,10 +8,9 @@ import Button from "./Button";
 import Btn from "./Btn";
 
 const ExerciseDetails = () => {
-    const { id } = useParams();
+    const { _id } = useParams();
 
-    const { userId, currentUser } = useContext(UserContext);
-
+    const { userId, currentUser, reRender, setReRender } = useContext(UserContext);
     //variable to store fetch result
     const [exercise, setExercise] = useState(null);
 
@@ -32,13 +31,13 @@ const ExerciseDetails = () => {
 
     //fetch for exercise id
     useEffect(() => {
-        fetch(`/exercise/${id}`)
+        fetch(`/exercise/${_id}`)
         .then((res) => res.json())
-        .then((data) => setExercise(data.data))
+        .then((data) => setExercise(data.result))
         .catch((err) => {
             console.log(err);
         });
-    }, [id]);
+    }, [_id]);
     
     //function that sets text area value(as 'description')
     const handleTextAreaInput = (ev) => {
@@ -57,16 +56,22 @@ const ExerciseDetails = () => {
     }
 
     // function that saves current exercise in the selected workout
-    const addToWorkout = (ev, workoutId) => {
+    const addToWorkout = (ev) => {
         ev.preventDefault();
-        console.log("add TWO")
         //do fetch only if user is logged in  
         if (userId) {
             fetch("/add-to-workout", {
-                method: "POST",
+                method: "PUT",
                 body: JSON.stringify({
+                    //gjhgkjygkuygKUHG'JKHB'KHG IMPORTANT CURRENTUSER._id
+                    userId: userId,
                     workoutId: workoutId, 
-                    exerciseId: exercise.id, 
+                    exerciseId: exercise._id, 
+                    bodyPart: exercise.bodyPart,
+                    equipment: exercise.equipment,
+                    name: exercise.name,
+                    target: exercise.target,
+                    gifUrl: exercise.gifUrl,
                     description: description
                 }),
                 headers: {
@@ -107,13 +112,13 @@ const ExerciseDetails = () => {
         //do fetch only if user is logged in 
         if (userId){
             fetch("/add-favorite", {
-                method: "POST",
+                method: "PUT",
                 body: JSON.stringify({
                     userId: userId,  
                     bodyPart: exercise.bodyPart,
                     equipment: exercise.equipment,
                     gifUrl: exercise.gifUrl,
-                    id: exercise.id,
+                    _id: exercise._id,
                     name: exercise.name,
                     target: exercise.target,
                     description: description,
@@ -125,9 +130,11 @@ const ExerciseDetails = () => {
             .then((res) => res.json())
             .then((json) => {
                 if (json.status === 201){
-                    setMessage(json.message)
+                    setMessage(json.message);
+                    setReRender(!reRender)
                 }
                 else{
+                    setMessage(null);
                     setError(json.message)
                 }
             })
@@ -191,19 +198,22 @@ const ExerciseDetails = () => {
                                 displaySelectWorkout === true && currentUser &&
                                 <Form onSubmit={addToWorkout}>
                                     <Label>
-                                        {
-                                            currentUser?.workouts.map((workout) => {
-                                                <Select 
-                                                    required 
-                                                    value={workout._id}
-                                                    onChange={(ev)=> setWorkoutId(ev.target.value)} 
-                                                    defaultValue="Select workout"
-                                                >
-                                                    <option disabled>Select workout</option>
-                                                    <option>{workout.name}</option>
-                                                </Select>
-                                            })
-                                        }
+                                        <Select 
+                                            required 
+                                            onChange={(ev)=> setWorkoutId(ev.target.value)} 
+                                            defaultValue="Select workout"
+                                            >
+                                            <option disabled>Select workout</option>
+                                            {
+                                                currentUser.workouts.map((workout, index) => {
+                                                    return (
+                                                        <React.Fragment key={index}>
+                                                            <option value={workout._id}>{workout.name}</option>
+                                                        </React.Fragment>
+                                                    )
+                                                })
+                                            }
+                                        </Select>
                                     </Label>
                                     <Btn type="submit">add</Btn>
                                 </Form>

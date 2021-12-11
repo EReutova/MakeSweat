@@ -10,7 +10,7 @@ const LogIn = () => {
 
     const history = useHistory();
 
-    const {userId, reRender, setReRender} = useContext(UserContext);
+    const {userId, setUserId, reRender, setReRender} = useContext(UserContext);
 
     //variable that sets error after fetch
     const [error, setError] = useState(null)
@@ -29,7 +29,7 @@ const LogIn = () => {
         if (userId !== null){
             history.push("/")
         }
-    })
+    }, [])
 
     const handleToSignUp = () => {
         history.push("/signup")
@@ -59,6 +59,7 @@ const LogIn = () => {
             if (json.status === 200){
                 //setting up id of user in a local storage
                 sessionStorage.setItem("current-user", JSON.stringify(json.user._id));
+                setUserId(json.user._id);
                 setReRender(!reRender);
                 history.push("/profile");
             }

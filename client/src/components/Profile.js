@@ -7,7 +7,6 @@ import { Heart } from "react-feather";
 import { Trash } from "react-feather";
 
 import { UserContext } from "./UserContext";
-// import { WorkoutsContext } from "./WorkoutsContext";
 import Button from "./Button";
 import Btn from "./Btn";
 
@@ -15,7 +14,6 @@ const Profile = () => {
     const history = useHistory();
 
     const { currentUser, reRender, setReRender } = useContext(UserContext);
-    // const { workouts } = useContext(WorkoutsContext);
 
     //initial state of workout info
     const initialState = {
@@ -23,11 +21,33 @@ const Profile = () => {
         name: "",
     }
 
-    //variable that is in charge of displaying the section for create workout
+    //initial state of user's info
+    const initialUserState = {
+        name: currentUser?.name,
+        age: currentUser?.age,
+        weight: currentUser?.weight,
+        email: currentUser?.email,
+        password: currentUser?.password
+    }
+
+    //variable that is in charge of displaying the section "add to workout"
     const [display, setDisplay] = useState(false);
 
-    //variable that holds data from form
+    //variable that is in charge of displaying user's info section
+    const [displayInfo, setDisplayInfo] = useState(true);
+
+    //variable that holds data from form "Create worcout"
     const [formData, setFormData] = useState(initialState);
+
+    //variable that holds data from "update data" form
+    const [userData, setUserData] = useState(initialUserState);
+
+    //variable that holda errors
+    const [error, setError] = useState(null);
+
+    //variable to store password for validation
+    const [password, setPassword] = useState(null);
+
 
     //function that turns received from BE password into "****" \\\\WILL BE UPDATED ONES I FIGURE OUT HASH
     const handlePassword = () => {
@@ -43,9 +63,18 @@ const Profile = () => {
         setDisplay(true);
     }
 
+    // function that displayes "update data" section when you click on button "update data"
+    const handleDisplayInfo = () => {
+        setDisplayInfo(false)
+    }
+
     //function that updates formData wirh values from inputs
     const updateForm = (value, name) => {      
         setFormData({...formData, [name]: value});
+    }
+
+    const updateUserInfo = (value, name) => {
+        setUserData({...userData, [name]: value});
     }
 
     // function that redirects to /favorites
@@ -60,16 +89,14 @@ const Profile = () => {
 
     //function that deletes workout
     const handleToDelete = (element) => {
-        console.log(element._id, "id")
         fetch(`/workout/${element._id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
             },
         })
-        .then((res) => res.json())
+        // .then((res) => JSON.parse(res))
         .then((json) => {
-            console.log(json)
             setReRender(!reRender);
         })
         .catch((err) => {
@@ -95,7 +122,6 @@ const Profile = () => {
         })
         .then((res) => res.json())
         .then((json) => {
-            // console.log(json);
             setReRender(!reRender);
         })
         .catch((err) => {
@@ -104,21 +130,134 @@ const Profile = () => {
         setDisplay(false);
     }
 
+    const validatePassword = (value) => {
+        setPassword(value);
+    }
+
+    const handleUpdateUsersInfo = (ev) => {
+        ev.preventDefault();
+        if (password !== currentUser.password){
+            setError("Wrong password!");
+        }
+        else {
+            fetch(`/user/${currentUser._id}`, {
+                method: "PATCH",
+                body: JSON.stringify({
+                    name: userData.name,  
+                    age: userData.age,
+                    weight: userData.weight,
+                    email: userData.email,             
+                    password: userData.password
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            .then((res) => res.json())
+            .then((json) => {
+                if (json.status === 200){
+                    setError(null);
+                    setDisplayInfo(true);
+                    setReRender(!reRender)
+                }
+                else{
+                    setReRender(!reRender)
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })    
+        }
+    }
+
     return(
         <>
         {
             currentUser &&
                 <Main>
                     <Wrapper>
-                        <UserInfo>
-                            <Name>{currentUser.name}</Name>
-                            <Par>Age: {currentUser.age}</Par>
-                            <Par>Weight: {currentUser.weight}</Par>
-                            <Par>Email: {currentUser.email}</Par>
-                            <Par>Password: {handlePassword()}</Par>
-                            <FavBtn onClick={toFavorites}><Heart/> Favorites</FavBtn>
-                            <Button>Update data</Button>
-                        </UserInfo>
+                        {
+                            displayInfo === true &&
+                                <UserInfo>
+                                    <Name>{currentUser.name}</Name>
+                                    <Par>Age: {currentUser.age}</Par>
+                                    <Par>Weight: {currentUser.weight}kg</Par>
+                                    <Par>Email: {currentUser.email}</Par>
+                                    <Par>Password: {handlePassword()}</Par>
+                                    <FavBtn onClick={toFavorites}><Heart/> Favorites</FavBtn>
+                                    <Button onClick={handleDisplayInfo}>Update data</Button>
+                                </UserInfo>
+                        }
+                        {
+                            displayInfo === false &&
+                                <UserInfo>
+                                    <Name>Update information</Name>
+                                    <Form onSubmit={handleUpdateUsersInfo}>
+
+                                        <Label>
+                                            <Inp 
+                                                type="text"
+                                                name="name"
+                                                placeholder={currentUser.name} 
+                                                onChange={(ev)=> updateUserInfo(ev.target.value, ev.target.name)}
+                                            />
+                                        </Label>
+
+                                        <Label>
+                                            <Inp 
+                                                type="text"
+                                                name="age"
+                                                placeholder={`Age: ${currentUser.age}`}
+                                                onChange={(ev)=> updateUserInfo(ev.target.value, ev.target.name)}
+                                            />
+                                        </Label>
+
+                                        <Label>
+                                            <Inp 
+                                                type="text"
+                                                name="weight"
+                                                placeholder={`Weight: ${currentUser.weight}kg`}
+                                                onChange={(ev)=> updateUserInfo(ev.target.value, ev.target.name)}
+                                            />
+                                        </Label>
+
+                                        <Label>
+                                            <Inp 
+                                                type="email"
+                                                name="email"
+                                                placeholder={currentUser.email} 
+                                                onChange={(ev)=> updateUserInfo(ev.target.value, ev.target.name)}
+                                            />
+                                        </Label>
+
+                                        <Label>
+                                            <Inp 
+                                                type="password"
+                                                name="password"
+                                                required
+                                                placeholder="Password" 
+                                                onChange={(ev)=> validatePassword(ev.target.value)}
+                                            />
+                                        </Label>
+                                        
+                                        <Label>
+                                            <Inp 
+                                                type="password"
+                                                name="password"
+                                                placeholder="New password" 
+                                                onChange={(ev)=> updateUserInfo(ev.target.value, ev.target.name)}
+                                            />
+                                        </Label>
+
+                                        <Button type="submit">save changes</Button>
+                                        {
+                                            error !== null &&
+                                            <Error>{error}</Error>
+                                        }
+                                    </Form>
+                                    
+                                </UserInfo>
+                        }
                         <WorkoutsInfo>
                             <Name>Workouts</Name>
                             {
@@ -128,7 +267,7 @@ const Profile = () => {
                                         <Container key={index}>
                                             <Wrap>
                                                 <NewBtn 
-                                                    onClick={()=> {handleToWorkoutDetails(workout)}}
+                                                    onClick={()=> {handleToWorkoutDetails(workout._id)}}
                                                 >
                                                 <Span>{workout.name}:</Span> {workout.type}</NewBtn>
                                                 <FavBtn onClick={() => {handleToDelete(workout)}}><Trash/></FavBtn>
@@ -191,10 +330,9 @@ const Wrapper = styled.div`
     margin-right: 0 auto;
     box-shadow: -2px 2px 10px 5px #cacaca;
     background: rgba(71, 72, 71, 0.7);
-    /* overflow-y: scroll; */
-
 `;
 const UserInfo = styled.div`
+    width: 400px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -271,5 +409,17 @@ const Input = styled.input`
     padding: 10px;
     border-radius: 5px;
     width: 500px;
+`;
+const Inp = styled(Input)`
+    width: 350px;
+`;
+const Error = styled.p`
+    padding: 10px;
+    margin: 20px 0;
+    font-size: 26px;
+    text-align: center;
+    color: var(--color-red-crayola);
+    border: 2px solid var(--color-red-crayola);
+    border-radius: 5px;
 `;
 export default Profile;

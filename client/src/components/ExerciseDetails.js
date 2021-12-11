@@ -50,9 +50,14 @@ const ExerciseDetails = () => {
     //2. Sets "displaySelectWorkout" to "true" to render options
     const handleSelectWorkout = (ev) => {
         ev.preventDefault();
-        setMessage(null);
-        setError(null);
-        setDisplaySelectWorkout(true);
+        if (currentUser.workouts.length > 0){
+            setMessage(null);
+            setError(null);
+            setDisplaySelectWorkout(true);
+        }
+        else{
+            setError("Please create workout first!")
+        }
     }
 
     // function that saves current exercise in the selected workout
@@ -195,7 +200,7 @@ const ExerciseDetails = () => {
 
                             {/* displaying this piece of code only when adding exercise to workouts*/}
                             {
-                                displaySelectWorkout === true && currentUser &&
+                                displaySelectWorkout === true && currentUser && currentUser.workouts.length > 0 &&
                                 <Form onSubmit={addToWorkout}>
                                     <Label>
                                         <Select 

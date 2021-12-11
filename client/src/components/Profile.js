@@ -122,6 +122,7 @@ const Profile = () => {
         })
         .then((res) => res.json())
         .then((json) => {
+
             setReRender(!reRender);
         })
         .catch((err) => {
@@ -278,7 +279,7 @@ const Profile = () => {
                             }
                             <Button onClick={handleDisplay}>Create a workout</Button>
                             {
-                                display === true &&
+                                display === true && 
                                     <NewWorkout>
                                         <Form onSubmit={createWorkout}>
                                             <Label>

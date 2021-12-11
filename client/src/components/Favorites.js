@@ -86,12 +86,12 @@ const Wrapper = styled.div`
 `;
 const Div = styled.div`
     width: 350px;
+    height: 100%;
     background: rgba(234, 235, 234, 0.7);
     margin: 20px;
     padding: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     position: relative;
     &:hover{
@@ -130,6 +130,7 @@ const Par = styled.p`
     color: #fff;
 `;
 const Buttons = styled.div`
+    margin-top: auto;
     display: flex;
     justify-content: space-around;
     width: 100%;

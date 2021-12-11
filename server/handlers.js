@@ -229,23 +229,23 @@ const createNewUser = async (req, res) => {
 
         const db = client.db("MakeSweat");
         
-        const { name, email, age, gender, weight, password, confirmation } = req.body;
+        const { name, email, age, gender, weight, password, confirmation, workouts, favorites } = req.body;
         
         //Validation
         if (name.length <= 2) {
             return res.status(400).json({ status: 400, message: "Please provide your full name" });
         }
-        else if (!email.includes("@")) {
-            return res.status(400).json({ status: 400, message: "Please provide valid email" });
+        else if (!age) {
+            return res.status(400).json({ status: 400, message: "Please enter your age" });
         }
         else if (!gender) {
             return res.status(400).json({ status: 400, message: "Please select a gender" });
         }
-        else if (!age) {
-            return res.status(400).json({ status: 400, message: "Please enter your age" });
-        }
         else if (!weight) {
-            return res.status(400).json({ status: 400, message: "Please enter your weight" });
+            return res.status(400).json({ status: 400, message: "Please enter your weight in kg" });
+        }
+        else if (!email.includes("@")) {
+            return res.status(400).json({ status: 400, message: "Please provide valid email" });
         }
         else if (!password || !confirmation){
             return res.status(400).json({ status: 400, message: "Please enter your password" });
@@ -260,7 +260,17 @@ const createNewUser = async (req, res) => {
         // Creates new _id for user
         const _id = uuidv4();
         
-        const newUser = { _id, ...req.body };
+        const newUser = { 
+            _id, 
+            name: name, 
+            age: age, 
+            gender: gender, 
+            weight: weight, 
+            email: email, 
+            password: password, 
+            workouts: workouts,
+            favorites: favorites
+        };
         
         //validation if user was registered or not yet
         const existingUser = await db.collection("users").findOne({email: newUser.email});

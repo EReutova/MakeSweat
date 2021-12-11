@@ -29,7 +29,7 @@ Browse exercises */}
                     </Div>
                 </Wrapper>
             </Main>
-            {/* <Feed /> */}
+            <Feed />
         </>
     )
 }

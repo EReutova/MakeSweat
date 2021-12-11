@@ -19,7 +19,8 @@ const SignUp = () => {
         gender: "",
         weight: "",
         email: "",
-        password: ""
+        password: "",
+        confirmation: "",
     }
 
     //variable that holds data from form
@@ -34,18 +35,24 @@ const SignUp = () => {
     //variable to hold errors
     const [error, setError] = useState(null);
 
-    const createUser = (obj) => {
+    const updateForm = (value, name) => {      
+        setFormData({...formData, [name]: value});
+    }
+
+    const createUser = (ev) => {
+        ev.preventDefault()
         //obj is used to send data to BE
 
         fetch("/create/user", {
             method: "POST",
             body: JSON.stringify({
-                name: obj.name,
-                age: obj.age,
-                gender: obj.gender,
-                weight: obj.weight,
-                email: obj.email.toLowerCase(),
-                password: obj.password,
+                name: formData.name,
+                age: formData.age,
+                gender: formData.gender,
+                weight: formData.weight,
+                email: formData.email.toLowerCase(),
+                password: formData.password,
+                confirmation: formData.confirmation,
                 workouts: [],
                 favorites: [],
             }),
@@ -55,65 +62,68 @@ const SignUp = () => {
         })
         .then((res) => res.json())
         .then((json) => {
-            //setting up id of user that is being created in local storage
-            sessionStorage.setItem("current-user", JSON.stringify(json._id));
-            setUserId(json._id)
-            setReRender(!reRender);
-            history.push("/");
+            if (json.status === 201){
+                //setting up id of user that is being created in local storage
+                sessionStorage.setItem("current-user", JSON.stringify(json._id));
+                setUserId(json._id);
+                setReRender(!reRender);
+                history.push("/");
+                setError(null);
+            }
+            else{
+                setError(json.message)
+            }
         })
         .catch((err) => {
             console.log(err);
         })
     }
 
-    const updateForm = (value, name) => {      
-        setFormData({...formData, [name]: value});
-    }
 
-    const  handlePassword = (ev) => {
-        setPass(ev.target.value);
-    }
 
-    const  handleConfirmPassword = (ev) => {
-        setConfPass(ev.target.value);
-    }
+    // const  handlePassword = (ev) => {
+    //     setPass(ev.target.value);
+    // }
 
-    const settingPassword = (ev) => {
-        ev.preventDefault();
+    // const  handleConfirmPassword = (ev) => {
+    //     setConfPass(ev.target.value);
+    // }
 
-        if (pass !== null){
-            //generating random password
-            let number = Math.round(Math.random()*10);
-            const nouns = ["team", "dirt", "wilderness", "noise", "cover", "laborer", "waste", "scarf", "friction", "jar", "impulse", "truck", "trains", "teaching", "base", "chicken", "quilt", "wing", "queen", "word", "vegetable", "floor", "wren", "pin"];
-            let randomNounOne = nouns[Math.floor(Math.random() * nouns.length)];
-            let randomNounTwo = nouns[Math.floor(Math.random() * nouns.length)];
-            let randomNounThree = nouns[Math.floor(Math.random() * nouns.length)];
-            let randomNounFour = nouns[Math.floor(Math.random() * nouns.length)];
-            let randomPassword = `${randomNounOne}-${randomNounTwo}-${randomNounThree}-${randomNounFour}-${number}`;
+    // const settingPassword = (ev) => {
+    //     ev.preventDefault();
+
+    //     if (pass !== null){
+    //         //generating random password
+    //         let number = Math.round(Math.random()*10);
+    //         const nouns = ["team", "dirt", "wilderness", "noise", "cover", "laborer", "waste", "scarf", "friction", "jar", "impulse", "truck", "trains", "teaching", "base", "chicken", "quilt", "wing", "queen", "word", "vegetable", "floor", "wren", "pin"];
+    //         let randomNounOne = nouns[Math.floor(Math.random() * nouns.length)];
+    //         let randomNounTwo = nouns[Math.floor(Math.random() * nouns.length)];
+    //         let randomNounThree = nouns[Math.floor(Math.random() * nouns.length)];
+    //         let randomNounFour = nouns[Math.floor(Math.random() * nouns.length)];
+    //         let randomPassword = `${randomNounOne}-${randomNounTwo}-${randomNounThree}-${randomNounFour}-${number}`;
             
-            //password validation
-            if (pass.length < 10){
-                setError("Your password is too short! " + "Try this " + randomPassword)
-            }
-            else if (pass !== confPass) {
-                setError("You password is not matching confirmation!")
-            }
-            else{
-                setFormData({...formData, password: pass});
-                createUser({...formData, password: pass});
-            }
-        }
-    }
+    //         //password validation
+    //         if (pass.length < 10){
+    //             setError("Your password is too short! " + "Try this " + randomPassword)
+    //         }
+    //         else if (pass !== confPass) {
+    //             setError("You password is not matching confirmation!")
+    //         }
+    //         else{
+    //             setFormData({...formData, password: pass});
+    //             createUser({...formData, password: pass});
+    //         }
+    //     }
+    // }
 
     return(
         <Main>
             <Wrapper>
                 <Header>Enter your information</Header>
-                <Form onSubmit={settingPassword}>
+                <Form onSubmit={createUser}>
                     <Label>
                         <Input 
                             type="text" 
-                            required 
                             name="name"
                             placeholder="Full Name"
                             onChange={(ev)=> updateForm(ev.target.value, ev.target.name)}
@@ -123,7 +133,6 @@ const SignUp = () => {
                     <Label>
                         <Input 
                             type="text" 
-                            required 
                             name="age"
                             placeholder="Your age" 
                             onChange={(ev)=> updateForm(ev.target.value, ev.target.name)}
@@ -132,7 +141,6 @@ const SignUp = () => {
                     
                     <Label>
                         <Select 
-                            required 
                             name="gender"
                             onChange={(ev)=> updateForm(ev.target.value, ev.target.name)} 
                             defaultValue="Select gender"
@@ -146,7 +154,6 @@ const SignUp = () => {
                     <Label>
                         <Input 
                             type="text" 
-                            required 
                             name="weight"
                             placeholder="Weight in kg" 
                             onChange={(ev)=> updateForm(ev.target.value, ev.target.name)}
@@ -157,7 +164,6 @@ const SignUp = () => {
                     <Label>
                         <Input 
                             type="email" 
-                            required 
                             name="email"
                             placeholder="Email" 
                             onChange={(ev)=> updateForm(ev.target.value, ev.target.name)}
@@ -167,18 +173,18 @@ const SignUp = () => {
                     <Label>
                         <Input 
                             type="password" 
-                            required 
+                            name="password" 
                             placeholder="Password" 
-                            onChange={(ev) => handlePassword(ev)}
+                            onChange={(ev)=> updateForm(ev.target.value, ev.target.name)} 
                         /><Div><Span>*</Span></Div>
                     </Label>
 
                     <Label>
                         <Input 
-                            type="password" 
-                            required 
+                            type="password"
+                            name="confirmation"  
                             placeholder="Confirm Password" 
-                            onChange={(ev) => handleConfirmPassword(ev)}
+                            onChange={(ev)=> updateForm(ev.target.value, ev.target.name)} 
                         /><Div><Span>*</Span></Div>
                     </Label>
 

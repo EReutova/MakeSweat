@@ -2,7 +2,7 @@ import React, {useContext} from "react";
 import styled from "styled-components";
 
 import { ExercisesContext } from "./ExercisesContext";
-import ExerciseCard from "./ExerciseCard"
+import ExerciseCard from "./ExerciseCard";
 import Button from "./Button";
 
 const Feed = () => {

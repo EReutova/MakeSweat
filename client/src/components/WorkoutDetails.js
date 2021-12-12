@@ -168,6 +168,7 @@ const WorkoutDetails = () => {
 const Main = styled.div`
     height: 100%;
     width: 100%;
+    margin-top: 100px;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -1,5 +1,7 @@
 import { createGlobalStyle } from "styled-components";
 
+import bg from "../src/assets/bg.jpeg"
+
 export default createGlobalStyle`
 :root {
     --color-eerie-black: #1E1F1E;
@@ -9,18 +11,6 @@ export default createGlobalStyle`
     --color-platinum: #EAEBEA;
     --color-red-crayola: #F72E4C;
 }
-/* --color-red-crayola: #F72E4C;
---color-bitter-lemon: #C2E812;
---color-pine-green: #0B7A75;
-
-:root {
-    --color-black-olive: #3A3F3C;
-    --color-ebony: #565F5A;
-    --color-xanadu: #7C8A82;
-    --color-ash-gray: #BFC9C4;
-    --color-platinum: #EAEBEA;
-    --color-arctic-lime: #C7EE1B;
-} */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -43,12 +33,12 @@ time, mark, audio, video, select, input {
     font-family: 'Raleway', sans-serif;
 }
 html, body {
-    background-image: url("https://images.unsplash.com/photo-1516481265257-97e5f4bc50d5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80");
+    background-image: url(${bg});
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    height: 100%;
+    height: 100vh;
     width: 100%;
     background-color: var(--color-silver);
 }

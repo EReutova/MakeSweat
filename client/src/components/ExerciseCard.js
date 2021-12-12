@@ -12,10 +12,13 @@ import Btn from "./Btn";
 const ExerciseCard = ({exercise}) => {
     const history = useHistory();
 
-    const { currentUser, reRender, setReRender } = useContext(UserContext);
+    const { currentUser, reRender, setReRender, userId } = useContext(UserContext);
 
     //variable to hold BE message
     const [message, setMessage] = useState(null);
+
+    //variable to hold errors
+    const [error, setError] = useState(null);
     
     const handleToDetails = (id, ev) => {
         ev.stopPropagation()
@@ -28,7 +31,7 @@ const ExerciseCard = ({exercise}) => {
         ev.preventDefault();
 
         //do fetch only if user is logged in 
-        if (currentUser){
+        if (userId){
             fetch("/add-favorite", {
                 method: "PUT",
                 body: JSON.stringify({
@@ -48,12 +51,14 @@ const ExerciseCard = ({exercise}) => {
             .then((res) => res.json())
             .then((json) => {
                 if (json.status === 201){
-                    setMessage(json.message)
-                    setReRender(!reRender)
+                    setMessage(json.message);
+                    setError(null);
+                    setReRender(!reRender);
                 }
                 else{
-                    setMessage(json.message)
-                    setReRender(!reRender)
+                    setError(json.message);
+                    setMessage(null);
+                    setReRender(!reRender);
                 }
             })
             .catch((err) => {
@@ -63,7 +68,8 @@ const ExerciseCard = ({exercise}) => {
         
         //if user is not logged in
         else{
-            setMessage("Please login");
+            setError("Please login");
+            setMessage(null);
             setReRender(!reRender);
         }
     }
@@ -80,11 +86,16 @@ const ExerciseCard = ({exercise}) => {
                 <Img src={exercise.gifUrl}/>
                 <Head>{exercise.name}</Head>
                 {
-                    message === null ? (
-                        <Btn onClick={(ev) => handleToDetails(exercise._id, ev)}>View</Btn>
-                    ) : ( 
-                        <Message>{message}</Message>
-                    )
+                    message === null && error === null &&
+                        <Btn onClick={(ev) => handleToDetails(exercise._id, ev)}>View</Btn>                    
+                }
+                {
+                    message !== null &&
+                    <Message>{message}</Message>
+                }
+                {
+                    error !== null &&
+                    <Error>{error}</Error>
                 }
                 
             </Wrapper>
@@ -142,9 +153,13 @@ const Message = styled.p`
     margin: 25px 5px;
     font-size: 22px;
     text-align: center;
-    color: var(--color-davys-grey);
-    border: 2px solid var(--color-davys-grey);
+    color: #229481;
+    border: 2px solid #229481;
     border-radius: 5px;
+`;
+const Error = styled(Message)`
+    color: var(--color-red-crayola);
+    border: 2px solid var(--color-red-crayola);
 `;
 
 export default ExerciseCard;

@@ -1,12 +1,8 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
-
-import { UserContext } from "./UserContext";
+import React, { createContext, useState, useEffect } from "react";
 
 export const ExercisesContext = createContext(null);
 
 export const ExercisesProvider = ({ children }) => {
-
-    const { reRender, userId } = useContext(UserContext);
 
     //variable to store data from fetch "/exercises"
     const [exercises, setExercises] = useState([]);

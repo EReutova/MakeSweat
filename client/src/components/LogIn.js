@@ -162,6 +162,7 @@ const Par = styled.p`
 const Btn = styled.button`
     cursor: pointer;
     font-size: 26px;
+    font-weight: 700;
     border: none;
     background: transparent;
     color: var(--color-red-crayola);

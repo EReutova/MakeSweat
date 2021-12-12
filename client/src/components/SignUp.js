@@ -8,7 +8,7 @@ import { UserContext } from "./UserContext";
 // import { calculateAge } from "./CalculateAge";
 
 const SignUp = () => {
-    const { userId, setUserId, reRender, setReRender} = useContext(UserContext);
+    const { setUserId, reRender, setReRender} = useContext(UserContext);
 
     const history = useHistory()
 
@@ -25,12 +25,6 @@ const SignUp = () => {
 
     //variable that holds data from form
     const [formData, setFormData] = useState(initialState);
-
-    //variable that temporary holds password
-    const[pass, setPass] = useState(null);
-
-    //variable that temporary holds confirmation of password
-    const[confPass, setConfPass] = useState(null);
 
     //variable to hold errors
     const [error, setError] = useState(null);
@@ -78,43 +72,6 @@ const SignUp = () => {
             console.log(err);
         })
     }
-
-
-
-    // const  handlePassword = (ev) => {
-    //     setPass(ev.target.value);
-    // }
-
-    // const  handleConfirmPassword = (ev) => {
-    //     setConfPass(ev.target.value);
-    // }
-
-    // const settingPassword = (ev) => {
-    //     ev.preventDefault();
-
-    //     if (pass !== null){
-    //         //generating random password
-    //         let number = Math.round(Math.random()*10);
-    //         const nouns = ["team", "dirt", "wilderness", "noise", "cover", "laborer", "waste", "scarf", "friction", "jar", "impulse", "truck", "trains", "teaching", "base", "chicken", "quilt", "wing", "queen", "word", "vegetable", "floor", "wren", "pin"];
-    //         let randomNounOne = nouns[Math.floor(Math.random() * nouns.length)];
-    //         let randomNounTwo = nouns[Math.floor(Math.random() * nouns.length)];
-    //         let randomNounThree = nouns[Math.floor(Math.random() * nouns.length)];
-    //         let randomNounFour = nouns[Math.floor(Math.random() * nouns.length)];
-    //         let randomPassword = `${randomNounOne}-${randomNounTwo}-${randomNounThree}-${randomNounFour}-${number}`;
-            
-    //         //password validation
-    //         if (pass.length < 10){
-    //             setError("Your password is too short! " + "Try this " + randomPassword)
-    //         }
-    //         else if (pass !== confPass) {
-    //             setError("You password is not matching confirmation!")
-    //         }
-    //         else{
-    //             setFormData({...formData, password: pass});
-    //             createUser({...formData, password: pass});
-    //         }
-    //     }
-    // }
 
     return(
         <Main>
@@ -188,11 +145,13 @@ const SignUp = () => {
                         /><Div><Span>*</Span></Div>
                     </Label>
 
-                    <Button type="submit">Sign Up</Button>
                     {
                         error !== null &&
                         <Error>{error}</Error>
                     }
+                    <BtnDiv>
+                        <Button type="submit">Sign Up</Button>
+                    </BtnDiv>
                 </Form>
                 
             </Wrapper>
@@ -211,10 +170,10 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 75vh;
+    min-height: 80vh;
     width: 900px;
     border-radius: 10px;
-    margin: 30px;
+    margin: 20px;
     margin-right: 0 auto;
     box-shadow: -2px 2px 10px 5px #cacaca;
     background: rgba(71, 72, 71, 0.7);
@@ -232,6 +191,7 @@ const Form = styled.form`
     display: flex;
     flex-direction: column;
     margin: 20px;
+    min-height: 65vh;
 `;
 const Label = styled.label`
     margin: 5px;
@@ -258,6 +218,12 @@ const Select = styled.select`
     border-radius: 5px;
     width: 500px;
 `;
+const BtnDiv = styled.div`
+    margin-top: auto;
+    width: 500px;
+    display: flex;
+    justify-content: center;
+`;
 const Error = styled.p`
     padding: 10px;
     margin: 20px 0;
@@ -266,6 +232,6 @@ const Error = styled.p`
     color: var(--color-red-crayola);
     border: 2px solid var(--color-red-crayola);
     border-radius: 5px;
-    width: 500px;
+    width: 510px;
 `;
 export default SignUp;

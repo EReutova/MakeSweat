@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-const Footer = () => {
+const AllWorkouts = () => {
     return(
-        <div>Footer</div>
+        <div>AllWorkouts</div>
     )
 }
 
-export default Footer;
+export default AllWorkouts;

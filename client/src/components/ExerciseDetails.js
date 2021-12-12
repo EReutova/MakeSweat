@@ -282,6 +282,7 @@ const TextArea = styled.textarea`
     border: none;
     font-size: 26px;
     resize: none;
+    font-family: 'Raleway', sans-serif;
 `;
 const Message = styled.p`
     padding: 10px;

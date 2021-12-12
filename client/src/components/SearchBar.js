@@ -1,20 +1,26 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 
 import { useHistory } from "react-router-dom";
 
 import { Search } from "react-feather";
 import { X } from "react-feather";
+import { HiOutlineAdjustments } from 'react-icons/hi';
+
 
 
 import { ExercisesContext } from "./ExercisesContext";
 
-const SearchBar = () => {
+const SearchBar = ({ setDisplaySort }) => {
     const history = useHistory()
-    const { setInputValue, inputValue, exercises, setExercises, start, limit } = useContext(ExercisesContext);
+    const { setInputValue, inputValue, setExercises, start, limit } = useContext(ExercisesContext);
 
     const handleInput = (ev) => {
         setInputValue(ev.target.value);
+    }
+
+    const handleShowSort = (ev) => {
+        // setDisplaySort(true);
     }
 
     const handleSearch = (ev) => {
@@ -25,7 +31,7 @@ const SearchBar = () => {
         .then(data => {
             setExercises([...data.data]);
             // setInputValue("");
-            history.push("/");
+            history.push("/feed");
         })
         .catch((err) => {
             console.log(err);
@@ -40,6 +46,7 @@ const SearchBar = () => {
                 placeholder="Search" 
                 onChange={handleInput}
             />
+            <Btn onClick={(ev)=> handleShowSort(ev)}><HiOutlineAdjustments/></Btn>
             <Button onClick={()=> {setInputValue("")}}><X/></Button>
         </Form>
     )
@@ -69,5 +76,13 @@ const Button = styled.button`
     border: none;
     cursor: pointer;
     color: var(--color-davys-grey);
+`;
+const Btn = styled.button`
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--color-davys-grey);
+    font-size: 22px;
+    transform: rotate(90deg);
 `;
 export default SearchBar;

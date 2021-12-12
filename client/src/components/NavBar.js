@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext, useState} from "react";
 import styled from "styled-components";
 
 import { useHistory } from "react-router-dom";
@@ -11,12 +11,15 @@ import Btn from "./Btn";
 import Button from "./Button";
 import SearchBar from "./SearchBar";
 import { UserContext } from "./UserContext";
-
+import SortingBar from "./SortingBar";
 
 const NavBar = () => {
     const history = useHistory();
 
-    const { userId, setUserId, reRender } = useContext(UserContext);
+    const { userId, setUserId } = useContext(UserContext);
+
+    //variable than shows sorting bar
+    const [displaySort, setDisplaySort] = useState(false);
 
     const handleToHomePage = () => {
         history.push("/");
@@ -41,29 +44,35 @@ const NavBar = () => {
     }
     
     return(
-        <Wrapper>
-            <ImgLogo src={Logo} onClick={handleToHomePage}/>
-            <SearchBar />
+        <>
+            <Wrapper>
+                <ImgLogo src={Logo} onClick={handleToHomePage}/>
+                <SearchBar />
+                {
+                    userId === null ? (
+                        <Div>
+                            <Button onClick={handleToSignIn}>
+                                <User/>
+                                Log in
+                            </Button>
+                            <Btn onClick={handleToSignUp}>Sign up</Btn>
+                        </Div>
+                    ) : (
+                        <Div>
+                            <Button onClick={handleToProfile}>
+                                <User/>
+                                Profile
+                            </Button>
+                            <Btn onClick={handleLogOut}>Log out</Btn>
+                        </Div>
+                    )
+                }
+            </Wrapper>
             {
-                userId === null ? (
-                    <Div>
-                        <Button onClick={handleToSignIn}>
-                            <User/>
-                            Log in
-                        </Button>
-                        <Btn onClick={handleToSignUp}>Sign up</Btn>
-                    </Div>
-                ) : (
-                    <Div>
-                        <Button onClick={handleToProfile}>
-                            <User/>
-                            Profile
-                        </Button>
-                        <Btn onClick={handleLogOut}>Log out</Btn>
-                    </Div>
-                )
+                displaySort === true &&
+                <SortingBar displaySort={displaySort} setDisplaySort={setDisplaySort}/>
             }
-        </Wrapper>
+        </>
     )
 }
 

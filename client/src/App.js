@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import styled from "styled-components";
 
@@ -11,8 +11,8 @@ import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
 import ExerciseDetails from "./components/ExerciseDetails";
 import Favorites from "./components/Favorites";
-import WorkoutDetails from "./components/WorkoutDetails"
-import Footer from "./components/Footer";
+import WorkoutDetails from "./components/WorkoutDetails";
+import AllWorkouts from "./components/AllWorkouts";
 
 function App() {
 	
@@ -62,9 +62,13 @@ function App() {
                         <WorkoutDetails />
                     </Route>
 
+                    <Route path="/workouts">
+                        <NavBar />
+                        <AllWorkouts />
+                    </Route>
+
                 </Switch>
 
-                {/* <Footer /> */}
             </Wrapper>
 		</BrowserRouter>
 	);

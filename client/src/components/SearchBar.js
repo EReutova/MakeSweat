@@ -7,11 +7,9 @@ import { Search } from "react-feather";
 import { X } from "react-feather";
 import { HiOutlineAdjustments } from 'react-icons/hi';
 
-
-
 import { ExercisesContext } from "./ExercisesContext";
 
-const SearchBar = ({ setDisplaySort }) => {
+const SearchBar = ({ setDisplayFilter }) => {
     const history = useHistory()
     const { setInputValue, inputValue, setExercises, start, limit } = useContext(ExercisesContext);
 
@@ -19,8 +17,8 @@ const SearchBar = ({ setDisplaySort }) => {
         setInputValue(ev.target.value);
     }
 
-    const handleShowSort = (ev) => {
-        // setDisplaySort(true);
+    const handleShowFilter = (ev) => {
+        setDisplayFilter(true);
     }
 
     const handleSearch = (ev) => {
@@ -46,7 +44,7 @@ const SearchBar = ({ setDisplaySort }) => {
                 placeholder="Search" 
                 onChange={handleInput}
             />
-            <Btn onClick={(ev)=> handleShowSort(ev)}><HiOutlineAdjustments/></Btn>
+            <Btn onClick={(ev)=> handleShowFilter(ev)}><HiOutlineAdjustments/></Btn>
             <Button onClick={()=> {setInputValue("")}}><X/></Button>
         </Form>
     )

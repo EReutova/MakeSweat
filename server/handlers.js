@@ -508,11 +508,17 @@ const updateWorkout = async (req, res) => {
         const result = await db.collection("workouts").updateOne(query, newValues);
 
         //updating the array of user's workouts
-        const userQuery = { "_id": userId, "workouts._id.exercises": exerciseId};
+        const userQuery = { "_id": userId};
 
-        const userNewVal = { $set: { "exercises.$.description": description }};
 
-        const updatedUser = await db.collection("users").updateOne(userQuery, userNewVal);
+        const userNewVal = { $set: { "workouts.$[workouts].exercises.$[exercises].description": description }};
+
+        const filters = {
+            arrayFilters : [{ 'workouts._id' : _id }, { "exercises.exerciseId": exerciseId }],
+            new: true
+        }
+        
+        const updatedUser = await db.collection("users").findOneAndUpdate(userQuery, userNewVal, filters) ;
 
         result && updatedUser
             ? res.status(200).json({ status: 200, message: "Description was added" })
@@ -637,8 +643,6 @@ const addToWorkouts = async (req, res) => {
                 ? res.status(201).json({ status: 201, message: "Exercise was added to your workout" })
                 : res.status(400).json({ status: 400, message: "Something went wrong! Try again!" });
         }
-
-
     }
     catch (err) {
         console.log(err)
@@ -666,7 +670,6 @@ const removeFromWorkouts = async (req, res) => {
         const newValues = { $pull: { "exercises": {"exerciseId": exerciseId} }};
 
         const result = await db.collection("workouts").updateOne(query, newValues);
-
 
         //updating the array of user's workouts
         const userQuery = { "_id": userId, "workouts._id": workoutId};

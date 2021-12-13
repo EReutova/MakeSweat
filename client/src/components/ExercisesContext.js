@@ -14,6 +14,16 @@ export const ExercisesProvider = ({ children }) => {
     //variable to hold the search input value
     const [inputValue, setInputValue] = useState("");
 
+    //initial state of complex search
+    const initialState = {
+        equipment: "",
+        target: "",
+        bodyPart: "",
+    }
+
+    //variable that holds filtered search request
+    const [filteredSearch, setFilteredSearch] = useState(initialState);
+
     useEffect(() => {
         fetch(`/exercises?searchRequest=${inputValue}&start=${start}&limit=${limit}`)
         .then(res => res.json())
@@ -27,14 +37,11 @@ export const ExercisesProvider = ({ children }) => {
     
     return (
         <ExercisesContext.Provider value={{
-            exercises,
-            setExercises,
-            start,
-            setStart,
-            limit,
-            setLimit,
-            inputValue, 
-            setInputValue
+            exercises, setExercises,
+            start, setStart,
+            limit, setLimit,
+            inputValue, setInputValue,
+            filteredSearch, setFilteredSearch
         }}>
             {children}
         </ExercisesContext.Provider>

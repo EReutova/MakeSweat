@@ -1,14 +1,53 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 
-const SortingBar = () => {
+import { useHistory } from "react-router-dom";
+
+import { ExercisesContext } from "./ExercisesContext";
+
+const FilteringBar = ({displayFilter, setDisplayFilter}) => {
+    const history = useHistory();
+
+    const { 
+        inputValue, 
+        setExercises, 
+        start, limit, 
+        filteredSearch, setFilteredSearch 
+    } = useContext(ExercisesContext);
+
+    //function that updates searchData wirh values from dropdowns
+    const updateSearchData = (value, name) => {      
+        setFilteredSearch({...filteredSearch, [name]: value});
+    }
+    
+    const handleCancel = (ev) => {
+        ev.preventDefault();
+        setDisplayFilter(false);
+    }
+    const handleComplexSearch = (ev) => {
+        ev.preventDefault();
+        setDisplayFilter(false);
+
+        // fetch(`/exercises?searchRequest=${inputValue}&equipment=${filteredSearch.equipment}&target=${filteredSearch.target}&bodyPart=${filteredSearch.bodyPart}&start=${start}&limit=${limit}`)
+        // .then(res => res.json())
+        // .then(data => {
+        //     setExercises([...data.data]);
+        //     history.push("/feed");
+        //     setDisplayFilter(false);
+        // })
+        // .catch((err) => {
+        //     console.log(err);
+        // });
+    }
+
+
     return(
         <Wrapper>
-            <Form>
+            <Form onSubmit={handleComplexSearch}>
                 <Label>
                     <Select 
                         name="equipment"
-                        // onChange={(ev)=> updateForm(ev.target.value, ev.target.name)} 
+                        onChange={(ev)=> updateSearchData(ev.target.value, ev.target.name)} 
                         defaultValue="Select equipment"
                     >
                         <option>Select equipment</option>
@@ -45,7 +84,7 @@ const SortingBar = () => {
                 <Label>
                     <Select 
                         name="target"
-                        // onChange={(ev)=> updateForm(ev.target.value, ev.target.name)} 
+                        onChange={(ev)=> updateSearchData(ev.target.value, ev.target.name)} 
                         defaultValue="Select target"
                     >
                         <option>Select target</option>
@@ -73,7 +112,7 @@ const SortingBar = () => {
                 <Label>
                     <Select  
                         name="bodyPart"
-                        // onChange={(ev)=> updateForm(ev.target.value, ev.target.name)} 
+                        onChange={(ev)=> updateSearchData(ev.target.value, ev.target.name)} 
                         defaultValue="Select body part"
                     >
                         <option>Select body part</option>
@@ -89,8 +128,10 @@ const SortingBar = () => {
                         <option>waist</option>
                     </Select>
                 </Label>
-                <Button type="submit">search</Button>
-
+                <Buttons>
+                    <Button type="submit">search</Button>
+                    <Button onClick={handleCancel}>Cancel</Button>
+                </Buttons>
             </Form>
         </Wrapper>
     )
@@ -120,7 +161,6 @@ const Select = styled.select`
 `;
 const Button = styled.button`
     margin: 5px 20px;
-    margin-left: auto;
     position: relative;
     display: inline-block;
     padding: 15px 30px;
@@ -142,4 +182,9 @@ const Button = styled.button`
     }
 
 `;
-export default SortingBar;
+const Buttons = styled.div`
+    display: flex;
+    margin-left: auto;
+
+`;
+export default FilteringBar;

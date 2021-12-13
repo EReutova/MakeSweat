@@ -11,15 +11,15 @@ import Btn from "./Btn";
 import Button from "./Button";
 import SearchBar from "./SearchBar";
 import { UserContext } from "./UserContext";
-import SortingBar from "./SortingBar";
+import FilteringBar from "./FilteringBar";
 
 const NavBar = () => {
     const history = useHistory();
 
     const { userId, setUserId } = useContext(UserContext);
 
-    //variable than shows sorting bar
-    const [displaySort, setDisplaySort] = useState(false);
+    //variable than shows Filtering bar
+    const [displayFilter, setDisplayFilter] = useState(false);
 
     const handleToHomePage = () => {
         history.push("/");
@@ -47,7 +47,7 @@ const NavBar = () => {
         <>
             <Wrapper>
                 <ImgLogo src={Logo} onClick={handleToHomePage}/>
-                <SearchBar />
+                <SearchBar setDisplayFilter={setDisplayFilter}/>
                 {
                     userId === null ? (
                         <Div>
@@ -69,8 +69,8 @@ const NavBar = () => {
                 }
             </Wrapper>
             {
-                displaySort === true &&
-                <SortingBar displaySort={displaySort} setDisplaySort={setDisplaySort}/>
+                displayFilter === true &&
+                <FilteringBar displayFilter={displayFilter} setDisplayFilter={setDisplayFilter}/>
             }
         </>
     )

@@ -12,7 +12,7 @@ const options = {
 };
 
 const getAllExercises = async (req, res) => {
-    const { searchRequest, start, limit } = req.query;
+    const { searchRequest, start, limit, equipment, target, bodyPart } = req.query;
 
     let startNum = Number(start);
     let limitNum = Number(limit);
@@ -32,10 +32,10 @@ const getAllExercises = async (req, res) => {
             // let newSearch = searchRequest.split(" ")
             newResult = result.filter((item) => {
                 return (
-                    item.bodyPart.toLowerCase().includes(searchRequest.toLowerCase()) ||
                     item.equipment.toLowerCase().includes(searchRequest.toLowerCase()) ||
-                    item.name.toLowerCase().includes(searchRequest.toLowerCase()) ||
-                    item.target.toLowerCase().includes(searchRequest.toLowerCase())
+                    item.target.toLowerCase().includes(searchRequest.toLowerCase()) ||
+                    item.bodyPart.toLowerCase().includes(searchRequest.toLowerCase()) ||
+                    item.name.toLowerCase().includes(searchRequest.toLowerCase()) 
                     )
             }).slice(startNum, limitNum+startNum)
         }

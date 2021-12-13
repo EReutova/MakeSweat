@@ -6,23 +6,22 @@ const morgan = require("morgan");
 // Importing handlers
 const { getAllExercises } = require("./handlers/getAllExercises");
 const { getExerciseById } = require("./handlers/getExerciseById");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
-// const {  } = require("./handlers/");
+// const { createNewUser } = require("./handlers/createNewUser");
+// const { getUserById } = require("./handlers/getUserById");
+// const { updateUser } = require("./handlers/updateUser");
+// const { deleteUser } = require("./handlers/deleteUser");
+// const { createNewWorkout } = require("./handlers/createNewWorkout");
+// const { getWorkout } = require("./handlers/getWorkout");
+// const { getAllWorkouts } = require("./handlers/getAllWorkouts");
+// const { updateWorkout } = require("./handlers/updateWorkout");
+// const { addToWorkouts } = require("./handlers/addToWorkouts");
+// const { removeFromWorkouts } = require("./handlers/removeFromWorkouts");
+// const { deleteWorkout } = require("./handlers/deleteWorkout");
+// const { addToFavorite } = require("./handlers/addToFavorite");
+// const { removeFromFavorite } = require("./handlers/removeFromFavorite");
+// const { getMotivatingQuote } = require("./handlers/getMotivatingQuote");
+// const { handleLogIn } = require("./handlers/handleLogIn");
+// const { getFilteredExercise } = require("./handlers/getFilteredExercise");
 
 
 const { 

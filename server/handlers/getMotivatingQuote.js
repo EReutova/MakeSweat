@@ -1,9 +1,6 @@
-const { MongoClient } = require("mongodb");
-
 const request = require("request");
 
 require("dotenv").config();
-const { MONGO_URI } = process.env;
 
 const { QUOTE_OF_THE_DAY_KEY } = process.env;
 
@@ -16,20 +13,29 @@ const fetch = require("node-fetch");
 
 const getMotivatingQuote = async (req, res) => {
 
-    const client = new MongoClient(MONGO_URI, options);
-
     try {
-        await client.connect();
+        const options = {
+            method: 'GET',
+            url: 'https://bodybuilding-quotes1.p.rapidapi.com/random-quote',
+            headers: {
+                'x-rapidapi-host': 'bodybuilding-quotes1.p.rapidapi.com',
+                'x-rapidapi-key': QUOTE_OF_THE_DAY_KEY
+            }
+        };
 
+        request(options, function (error, response, body) {
+            if (error) throw new Error(error);
 
-    } 
+            const result = JSON.parse(body);
 
-    catch (error) {
-
+            result
+                ? res.status(200).json({ status: 200, data: result, message: "Success" })
+                : res.status(404).json({ status: 404, data: result, message: "Quote is not found" });
+        });
     }
-
-    finally {
-        client.close();
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ status: 500, data: req.body, message: err.message })
     }
 };
 

@@ -91,6 +91,9 @@ const Profile = () => {
     const handleToDelete = (element) => {
         fetch(`/workout/${element._id}`, {
             method: "DELETE",
+            body: JSON.stringify({
+                userId: currentUser._id,
+            }),
             headers: {
                 "Content-Type": "application/json",
             },

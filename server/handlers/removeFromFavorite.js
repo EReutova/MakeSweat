@@ -14,17 +14,29 @@ const options = {
 const removeFromFavorite = async (req, res) => {
 
     const client = new MongoClient(MONGO_URI, options);
-
+    
     try {
         await client.connect();
+        
+        const db = client.db("MakeSweat");
 
+        const { userId, _id } = req.body;
 
-    } 
+        //updating the array of user's workouts
+        const query = { "_id": userId }
 
-    catch (error) {
+        const newValues = { $pull: { "favorites": { "_id": _id } }}
 
+        const result = await db.collection("users").updateOne(query, newValues);
+
+        result 
+            ? res.status(204).json({ status: 204, message: "Exercise is deleted successfully" })
+            : res.status(404).json({ status: 404, message: "Exercise is not found" });
     }
-
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ status: 500, data: req.body, message: err.message });
+    }
     finally {
         client.close();
     }

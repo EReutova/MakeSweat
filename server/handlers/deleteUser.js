@@ -1,10 +1,8 @@
 require("dotenv").config();
 
 const { MongoClient } = require("mongodb");
-const { v4: uuidv4 } = require("uuid");
 
 const { MONGO_URI } = process.env;
-const { QUOTE_OF_THE_DAY_KEY } = process.env;
 
 const options = {
     useNewUrlParser: true,
@@ -14,17 +12,25 @@ const options = {
 const deleteUser = async (req, res) => {
 
     const client = new MongoClient(MONGO_URI, options);
-
+    
     try {
         await client.connect();
 
+        const { _id } = req.params;
 
-    } 
+        const db = client.db("MakeSweat");
 
-    catch (error) {
+        const result = await db.collection("users").deleteOne({ _id });
 
+        //I mign also will need to delete user's workouts
+        result
+            ? res.status(204).json({ status: 204, data: "User deleted successfully" })
+            : res.status(404).json({ status: 404, data: "User is not found" });
     }
-
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ status: 500, message: err.message });
+    }
     finally {
         client.close();
     }

@@ -179,7 +179,7 @@ const ExerciseDetails = () => {
                                                 onChange={handleTextAreaInput}
                                                 placeholder="Such as 30 repetitions, 3 times" 
                                                 multiline 
-                                                rows={2}
+                                                rows={4}
                                             />
                                         </Divv>
                                     </>

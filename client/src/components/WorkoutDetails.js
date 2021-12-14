@@ -10,7 +10,7 @@ import Btn from "./Btn";
 const WorkoutDetails = () => {
     const { id } = useParams();
 
-    const { reRender, currentUser } = useContext(UserContext);
+    const { setReRender, reRender, currentUser } = useContext(UserContext);
 
     //variable that holds workout details
     const [chosenWorkout, setChosenWorkout] = useState(null);
@@ -21,6 +21,9 @@ const WorkoutDetails = () => {
         })
         return result;
     })
+
+    //variable to hold BE messages
+    const [message, setMessage] = useState(null);
 
     const handleSaveWorkout = () => {
         fetch(`/save-workout`, {
@@ -36,9 +39,10 @@ const WorkoutDetails = () => {
                 "Content-Type": "application/json",
             },
         })
-        // .then((res) => res.json())
+        .then((res) => res.json())
         .then((json) => {
-            console.log(json)
+            setMessage(json.message);
+            setReRender(!reRender);
         })
         .catch((err) => {
             console.log(err)
@@ -81,8 +85,12 @@ const WorkoutDetails = () => {
                                         }
                                     </Div>
                                     {
-                                        !savedWorkout &&
+                                        !savedWorkout && !message &&
                                         <Btn onClick={handleSaveWorkout}>Save</Btn>
+                                    }
+                                    {
+                                        message && 
+                                        <Message>{message}</Message>
                                     }
                                     </>
                                 ) 
@@ -141,5 +149,13 @@ const Div = styled.div`
     flex-wrap: wrap;
     width: 100%;
 `;
-
+const Message = styled.p`
+    padding: 10px;
+    margin: 20px 300px;
+    font-size: 26px;
+    text-align: center;
+    color: #2fd9bc;
+    border: 2px solid #2fd9bc;
+    border-radius: 5px;
+`;
 export default WorkoutDetails;

@@ -8,23 +8,22 @@ const helmet = require("helmet");
 // Importing handlers
 const { getAllExercises } = require("./handlers/getAllExercises");
 const { getExerciseById } = require("./handlers/getExerciseById");
-// const { createNewUser } = require("./handlers/createNewUser");
-// const { getUserById } = require("./handlers/getUserById");
-// const { updateUser } = require("./handlers/updateUser");
-// const { deleteUser } = require("./handlers/deleteUser");
-// const { createNewWorkout } = require("./handlers/createNewWorkout");
+const { createNewUser } = require("./handlers/createNewUser");
+const { getUserById } = require("./handlers/getUserById");
+const { updateUser } = require("./handlers/updateUser");
+const { deleteUser } = require("./handlers/deleteUser");
+const { createNewWorkout } = require("./handlers/createNewWorkout");
 // const { getWorkout } = require("./handlers/getWorkout");
-// const { getAllWorkouts } = require("./handlers/getAllWorkouts");
-// const { updateWorkout } = require("./handlers/updateWorkout");
+const { getAllWorkouts } = require("./handlers/getAllWorkouts");
+const { updateWorkout } = require("./handlers/updateWorkout");
 const { saveWorkout } = require("./handlers/saveWorkout");
-// const { addToWorkouts } = require("./handlers/addToWorkouts");
-// const { removeFromWorkouts } = require("./handlers/removeFromWorkouts");
-// const { deleteWorkout } = require("./handlers/deleteWorkout");
-// const { addToFavorite } = require("./handlers/addToFavorite");
-// const { removeFromFavorite } = require("./handlers/removeFromFavorite");
-// const { getMotivatingQuote } = require("./handlers/getMotivatingQuote");
-// const { handleLogIn } = require("./handlers/handleLogIn");
-// const { getFilteredExercise } = require("./handlers/getFilteredExercise");
+const { addToWorkouts } = require("./handlers/addToWorkouts");
+const { removeFromWorkouts } = require("./handlers/removeFromWorkouts");
+const { deleteWorkout } = require("./handlers/deleteWorkout");
+const { addToFavorite } = require("./handlers/addToFavorite");
+const { removeFromFavorite } = require("./handlers/removeFromFavorite");
+const { getMotivatingQuote } = require("./handlers/getMotivatingQuote");
+const { handleLogIn } = require("./handlers/handleLogIn");
 
 
 const { 
@@ -34,21 +33,21 @@ const {
     getExerciseByEquipmentType, 
     getExerciseByTarget, 
     getExerciseByBodyPart, 
-    createNewUser, 
-    getUserById, 
-    updateUser, 
-    deleteUser,
-    createNewWorkout, 
+    // createNewUser, 
+    // getUserById, 
+    // updateUser, 
+    // deleteUser,
+    // createNewWorkout, 
     getWorkout,
-    getAllWorkouts,
-    updateWorkout, 
-    addToWorkouts, 
-    removeFromWorkouts,
-    deleteWorkout,
-    addToFavorite,
-    removeFromFavorite,
-    getMotivatingQuote,
-    handleLogIn
+    // getAllWorkouts,
+    // updateWorkout, 
+    // addToWorkouts, 
+    // removeFromWorkouts,
+    // deleteWorkout,
+    // addToFavorite,
+    // removeFromFavorite,
+    // getMotivatingQuote,
+    // handleLogIn
 } = require("./handlers")
 
 

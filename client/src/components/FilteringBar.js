@@ -6,13 +6,16 @@ import { useHistory } from "react-router-dom";
 import { ExercisesContext } from "./ExercisesContext";
 
 const FilteringBar = ({displayFilter, setDisplayFilter}) => {
+    
     const history = useHistory();
 
     const { 
         inputValue, 
+        exercises,
         setExercises, 
         start, limit, 
-        filteredSearch, setFilteredSearch 
+        filteredSearch, setFilteredSearch,
+        initialState
     } = useContext(ExercisesContext);
 
     //function that updates searchData wirh values from dropdowns
@@ -26,18 +29,19 @@ const FilteringBar = ({displayFilter, setDisplayFilter}) => {
     }
     const handleComplexSearch = (ev) => {
         ev.preventDefault();
-        setDisplayFilter(false);
-
-        // fetch(`/exercises?searchRequest=${inputValue}&equipment=${filteredSearch.equipment}&target=${filteredSearch.target}&bodyPart=${filteredSearch.bodyPart}&start=${start}&limit=${limit}`)
-        // .then(res => res.json())
-        // .then(data => {
-        //     setExercises([...data.data]);
-        //     history.push("/feed");
-        //     setDisplayFilter(false);
-        // })
-        // .catch((err) => {
-        //     console.log(err);
-        // });
+        console.log(filteredSearch);
+        fetch(`/exercises?searchRequest=${inputValue}&equipment=${filteredSearch.equipment}&target=${filteredSearch.target}&bodyPart=${filteredSearch.bodyPart}&start=${start}&limit=${limit}`)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            setExercises([...data.data]);
+            setDisplayFilter(false);
+            setFilteredSearch(initialState);
+            history.push("/feed");
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     }
 
 

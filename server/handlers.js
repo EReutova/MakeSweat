@@ -207,9 +207,6 @@ const getExerciseByBodyPart = async (req, res) => {
     }
 };
 
-//********************** */
-// getFilteredExercise,
-
 const createNewUser = async (req, res) => {
 
     const client = new MongoClient(MONGO_URI, options);
@@ -554,10 +551,6 @@ const deleteWorkout = async (req, res) => {
         //updating the array of user's workouts - removing one
         const workoutsUpdated = await db.collection("users").updateOne(query, newValues);
         
-        //deleting workout
-        const result = await db.collection("workouts").deleteOne({ _id });
-
-        
         if (result && workoutsUpdated){
             res.status(204).json({ status: 204, message: "Workout is deleted successfully" })
         }
@@ -848,7 +841,6 @@ module.exports = {
     getExerciseByEquipmentType,
     getExerciseByTarget,
     getExerciseByBodyPart,
-    // getFilteredExercise,
     createNewUser,
     getUserById,
     updateUser, 

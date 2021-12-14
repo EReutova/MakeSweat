@@ -5,14 +5,45 @@ import { useParams } from "react-router";
 
 import { UserContext } from "./UserContext";
 import ExerciseCardForWorkout from "./ExerciseCardForWorkout";
+import Btn from "./Btn";
 
 const WorkoutDetails = () => {
     const { id } = useParams();
 
-    const { reRender } = useContext(UserContext);
+    const { reRender, currentUser } = useContext(UserContext);
 
     //variable that holds workout details
     const [chosenWorkout, setChosenWorkout] = useState(null);
+
+    const [savedWorkout, setSavedWorkout] = useState(()=> {
+        let result = currentUser?.workouts.find((item) => {
+            return item._id === id
+        })
+        return result;
+    })
+
+    const handleSaveWorkout = () => {
+        fetch(`/save-workout`, {
+            method: "PUT",
+            body: JSON.stringify({
+                exercises: chosenWorkout.exercises,
+                name: chosenWorkout.name,
+                type: chosenWorkout.type,
+                userId: currentUser._id,
+                _id: id
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        // .then((res) => res.json())
+        .then((json) => {
+            console.log(json)
+        })
+        .catch((err) => {
+            console.log(err)
+        })    
+    }
 
     useEffect(() => {
         fetch(`/workout/${id}`)
@@ -37,6 +68,7 @@ const WorkoutDetails = () => {
                                 chosenWorkout?.exercises.length === 0 ? (
                                     <P>You didn't add any exercises yet</P>
                                 ) : (
+                                    <>
                                     <Div>
                                         {
                                             chosenWorkout?.exercises.map((exercise, index) => {
@@ -48,6 +80,11 @@ const WorkoutDetails = () => {
                                             })
                                         }
                                     </Div>
+                                    {
+                                        !savedWorkout &&
+                                        <Btn onClick={handleSaveWorkout}>Save</Btn>
+                                    }
+                                    </>
                                 ) 
                             }
                         </>
@@ -55,6 +92,7 @@ const WorkoutDetails = () => {
                         <Par>Loading</Par>
                     )
                 }
+                
             </Wrapper>
         </Main>
     )

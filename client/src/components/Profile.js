@@ -147,7 +147,7 @@ const Profile = () => {
                     name: userData.name,  
                     age: userData.age,
                     weight: userData.weight,
-                    email: userData.email,             
+                    email: userData.email.toLowerCase(),             
                     password: userData.password
                 }),
                 headers: {

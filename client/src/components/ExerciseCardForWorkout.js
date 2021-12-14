@@ -8,7 +8,6 @@ import { Check } from "react-feather";
 import { Edit } from "react-feather";
 import { X } from "react-feather";
 
-
 import { UserContext } from "./UserContext";
 import Btn from "./Btn";
 
@@ -108,6 +107,7 @@ const ExerciseCardForWorkout = ({chosenWorkout, exercise, id}) => {
     return(
             <Wrapper>
                 <Img src={exercise.gifUrl}/>
+                <Info>
                 <Head>{exercise.name}</Head>
                 {
                     exercise.description && showDescription === true ? (
@@ -123,8 +123,9 @@ const ExerciseCardForWorkout = ({chosenWorkout, exercise, id}) => {
                 {
                     showBtn === false &&
                         <Form onSubmit={handleUpdateWorkout}>
-                            <Input 
+                            <TextArea 
                                 placeholder="add description" 
+                                rows="6"
                                 onChange={handleInput}
                             />
                             <Submit type="submit"><Check/></Submit>
@@ -137,31 +138,39 @@ const ExerciseCardForWorkout = ({chosenWorkout, exercise, id}) => {
                         <Trash/>
                     </Button>
                 </Buttons>
+                </Info>
             </Wrapper>
     )
 }
 
 const Wrapper = styled.div`
     position: relative;
-    width: 350px;
+    width: 100%;
     background: rgba(234, 235, 234, 0.7);
     margin: 25px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     &:hover{
         box-shadow: 0 0 10px var(--color-eerie-black), 0 0 20px var(--color-eerie-black), 0 0 30px var(--color-eerie-black);
     }
 `;
+const Info = styled.div`
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+`;
 const Div = styled.div`
-    width: 80%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
 `;
+const Buttons = styled(Div)`
+    margin-top: auto;
+`;
 const Img = styled.img`
-    width: 90%;
+    width: 350px;
     margin: 20px;
+    flex: 1;
 `;
 const Head = styled.h3`
     padding: 10px;
@@ -170,11 +179,7 @@ const Head = styled.h3`
     text-transform: uppercase;
     min-height: 60px;
 `;
-const Buttons = styled.div`
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-`;
+
 const Form = styled.form`
     display:flex;
     flex-direction:row;
@@ -184,13 +189,14 @@ const Form = styled.form`
     width: 100%;
     margin: 5px;
 `;
-const Input = styled.input`
+const TextArea = styled.textarea`
     background: var(--color-platinum);
     font-weight: 700;
     border: none;
     padding: 10px;
-    width: 300px;
+    width: 100%;
     font-size: 18px;
+    resize: none;
 
     &:focus{
         outline: none;
@@ -214,9 +220,10 @@ const Submit = styled(Button)`
 `;
 const Par = styled.p`
     padding: 10px;
-    text-align: center;
-    font-size: 22px;
+    text-align: left;
+    font-size: 18px;
     color: #fff;
+    min-height: 60px;
 `;
 
 export default ExerciseCardForWorkout;

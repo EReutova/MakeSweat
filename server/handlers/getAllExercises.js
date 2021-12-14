@@ -1,10 +1,8 @@
 require("dotenv").config();
 
 const { MongoClient } = require("mongodb");
-const { v4: uuidv4 } = require("uuid");
 
 const { MONGO_URI } = process.env;
-const { QUOTE_OF_THE_DAY_KEY } = process.env;
 
 const options = {
     useNewUrlParser: true,
@@ -13,6 +11,7 @@ const options = {
 
 const getAllExercises = async (req, res) => {
     const { searchRequest, start, limit, equipment, target, bodyPart } = req.query;
+    console.log(req.query)
 
     let startNum = Number(start);
     let limitNum = Number(limit);
@@ -24,24 +23,39 @@ const getAllExercises = async (req, res) => {
         const db = client.db("MakeSweat");
         const result = await db.collection("exercises").find().toArray();
     
-        let newResult;
+        let filteredResult = result;
+
+
+        if (equipment){
+            filteredResult = filteredResult.filter((item) => {
+                return item.equipment.toLowerCase().includes(equipment.toLowerCase())
+            })
+        }
+
+        if (target) {
+            filteredResult = filteredResult.filter((item) => {
+                return item.target.toLowerCase().includes(target.toLowerCase())
+            })
+        }
+
+        if (bodyPart) {
+            filteredResult = filteredResult.filter((item) => {
+                return item.bodyPart.toLowerCase().includes(bodyPart.toLowerCase())
+            })
+        }
 
         if (searchRequest) {
-        
-            //*************************************** */
-            // let newSearch = searchRequest.split(" ")
-            newResult = result.filter((item) => {
+            filteredResult = filteredResult.filter((item) => {
                 return (
                     item.equipment.toLowerCase().includes(searchRequest.toLowerCase()) ||
                     item.target.toLowerCase().includes(searchRequest.toLowerCase()) ||
                     item.bodyPart.toLowerCase().includes(searchRequest.toLowerCase()) ||
                     item.name.toLowerCase().includes(searchRequest.toLowerCase()) 
-                    )
-            }).slice(startNum, limitNum+startNum)
+                )        
+            })
         }
-        else {
-            newResult = result.slice(startNum, limitNum+startNum)
-        }
+
+        let newResult = filteredResult.slice(startNum, limitNum+startNum);
 
         result
         ? res.status(200).json({ status: 200, data: newResult, message: "Success" })

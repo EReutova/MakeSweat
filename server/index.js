@@ -2,6 +2,8 @@
 
 const express = require("express");
 const morgan = require("morgan");
+const helmet = require("helmet");
+
 
 // Importing handlers
 const { getAllExercises } = require("./handlers/getAllExercises");
@@ -14,6 +16,7 @@ const { getExerciseById } = require("./handlers/getExerciseById");
 // const { getWorkout } = require("./handlers/getWorkout");
 // const { getAllWorkouts } = require("./handlers/getAllWorkouts");
 // const { updateWorkout } = require("./handlers/updateWorkout");
+const { saveWorkout } = require("./handlers/saveWorkout");
 // const { addToWorkouts } = require("./handlers/addToWorkouts");
 // const { removeFromWorkouts } = require("./handlers/removeFromWorkouts");
 // const { deleteWorkout } = require("./handlers/deleteWorkout");
@@ -31,7 +34,6 @@ const {
     getExerciseByEquipmentType, 
     getExerciseByTarget, 
     getExerciseByBodyPart, 
-    // getFilteredExercise,
     createNewUser, 
     getUserById, 
     updateUser, 
@@ -54,6 +56,7 @@ express()
 
     .use(morgan("tiny"))
     .use(express.json())
+    .use(helmet())
 
     .use(express.static("public"))
 
@@ -78,16 +81,13 @@ express()
     // get exercises by bodyPart 
     .get("/exercises/bodyPart/:bodyPart", getExerciseByBodyPart)
 
-    // get filtered exercises
-    // .get("/search/:equipment/:target/:bodyPart", getFilteredExercise)
-
     // create a new user USED
     .post("/create/user", createNewUser)
 
     // get user by id USED
     .get("/user/:_id", getUserById)
 
-    // update a user
+    // update a user USED
     .patch("/user/:_id", updateUser)
 
     // delete a user
@@ -99,11 +99,14 @@ express()
     // get a workout USED
     .get("/workout/:_id", getWorkout)
 
-    //get all workouts
+    //get all workouts USED
     .get("/workouts", getAllWorkouts)
 
-    // update a workout ???? need help with it
+    // update a workout USED
     .patch("/workout/:_id", updateWorkout)
+
+    //save Workout to user's workouts
+    .put("/save-workout", saveWorkout)
 
     // delete workout USED
     .delete("/workout/:_id", deleteWorkout)

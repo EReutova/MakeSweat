@@ -25,7 +25,7 @@ export const ExercisesProvider = ({ children }) => {
     const [filteredSearch, setFilteredSearch] = useState(initialState);
 
     useEffect(() => {
-        fetch(`/exercises?searchRequest=${inputValue}&start=${start}&limit=${limit}`)
+        fetch(`/exercises?searchRequest=${inputValue}&equipment=${filteredSearch.equipment}&target=${filteredSearch.target}&bodyPart=${filteredSearch.bodyPart}&start=${start}&limit=${limit}`)
         .then(res => res.json())
         .then(data => {
             setExercises([...exercises, ...data.data])
@@ -41,7 +41,8 @@ export const ExercisesProvider = ({ children }) => {
             start, setStart,
             limit, setLimit,
             inputValue, setInputValue,
-            filteredSearch, setFilteredSearch
+            filteredSearch, setFilteredSearch,
+            initialState
         }}>
             {children}
         </ExercisesContext.Provider>

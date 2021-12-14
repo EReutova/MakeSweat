@@ -8,32 +8,51 @@ import { X } from "react-feather";
 import { HiOutlineAdjustments } from 'react-icons/hi';
 
 import { ExercisesContext } from "./ExercisesContext";
+import { UserContext } from "./UserContext";
 
 const SearchBar = ({ setDisplayFilter }) => {
-    const history = useHistory()
-    const { setInputValue, inputValue, setExercises, start, limit } = useContext(ExercisesContext);
+    const history = useHistory();
+    const { userId } = useContext(UserContext);
+
+    const { setInputValue, inputValue, setExercises, start, setStart, limit } = useContext(ExercisesContext);
 
     const handleInput = (ev) => {
         setInputValue(ev.target.value);
     }
 
     const handleShowFilter = (ev) => {
-        setDisplayFilter(true);
+        if (userId){
+            setDisplayFilter(true);
+        }
+        else{
+            history.push("/login");
+        }
+    }
+
+    const handleClear = () => {
+        setInputValue("");
+        setStart(0);
     }
 
     const handleSearch = (ev) => {
         ev.preventDefault();
 
-        fetch(`/exercises?searchRequest=${inputValue}&start=${start}&limit=${limit}`)
-        .then(res => res.json())
-        .then(data => {
-            setExercises([...data.data]);
-            // setInputValue("");
-            history.push("/feed");
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+        if(userId) {
+            fetch(`/exercises?searchRequest=${inputValue}&start=${start}&limit=${limit}`)
+            .then(res => res.json())
+            .then(data => {
+                setExercises([...data.data]);
+                // setInputValue("");
+                history.push("/feed");
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        }
+
+        else{
+            history.push("/login");
+        }
     }
 
     return(
@@ -45,7 +64,7 @@ const SearchBar = ({ setDisplayFilter }) => {
                 onChange={handleInput}
             />
             <Btn onClick={(ev)=> handleShowFilter(ev)}><HiOutlineAdjustments/></Btn>
-            <Button onClick={()=> {setInputValue("")}}><X/></Button>
+            <Button onClick={handleClear}><X/></Button>
         </Form>
     )
 }

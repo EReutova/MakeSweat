@@ -10,7 +10,7 @@ import Btn from "./Btn";
 const WorkoutDetails = () => {
     const { id } = useParams();
 
-    const { setReRender, reRender, currentUser } = useContext(UserContext);
+    const { setReRender, reRender, currentUser, userId } = useContext(UserContext);
 
     //variable that holds workout details
     const [chosenWorkout, setChosenWorkout] = useState(null);
@@ -32,8 +32,9 @@ const WorkoutDetails = () => {
                 exercises: chosenWorkout.exercises,
                 name: chosenWorkout.name,
                 type: chosenWorkout.type,
-                userId: currentUser._id,
-                _id: id
+                userId: chosenWorkout.userId,
+                _id: id,
+                currentUserId: userId,
             }),
             headers: {
                 "Content-Type": "application/json",

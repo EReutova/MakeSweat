@@ -24,12 +24,11 @@ const saveWorkout = async (req, res) => {
             name,
             type,
             userId,
+            currentUserId,
         } = req.body
-
-        console.log(req.body)
         
         //Find firs the user, that need to be updated
-        const userToUpdate = await db.collection("users").findOne({_id: userId});
+        const userToUpdate = await db.collection("users").findOne({_id: currentUserId});
 
         //check if workout is already in user's workouts 
         let findWorkout = userToUpdate.workouts.find((workout)=> {
@@ -43,7 +42,7 @@ const saveWorkout = async (req, res) => {
 
         else{
             //if not - updating the array of user's workouts
-            const query = { "_id": userId };
+            const query = { "_id": currentUserId };
     
             const newValues = { $addToSet: { "workouts": {
                 "_id": _id, 

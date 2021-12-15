@@ -11,7 +11,6 @@ const options = {
 
 const getAllExercises = async (req, res) => {
     const { searchRequest, start, limit, equipment, target, bodyPart } = req.query;
-    console.log(req.query)
 
     let startNum = Number(start);
     let limitNum = Number(limit);

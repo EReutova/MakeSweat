@@ -16,7 +16,7 @@ const ExerciseCardForWorkout = ({chosenWorkout, exercise, id}) => {
 
     const history = useHistory();
 
-    const { currentUser, reRender, setReRender } = useContext(UserContext);
+    const { currentUser, reRender, setReRender, userId } = useContext(UserContext);
 
     //variable that holds value of description when it's being added
     const [description, setDescripton] = useState("");
@@ -113,15 +113,18 @@ const ExerciseCardForWorkout = ({chosenWorkout, exercise, id}) => {
                     exercise.description && showDescription === true ? (
                         <Div>
                             <Par>{exercise.description}</Par>
-                            <Button onClick={(ev)=>{handleShowBtn(ev)}}><Edit /></Button>
+                            {
+                                chosenWorkout.userId === userId &&
+                                <Button onClick={(ev)=>{handleShowBtn(ev)}}><Edit /></Button>
+                            }
                         </Div>
                     ) : (
-                        showBtn === true &&
+                        showBtn === true && chosenWorkout.userId === userId &&
                         <Button onClick={(ev)=>{handleShowBtn(ev)}}>Add your description</Button>
                     )
                 }
                 {
-                    showBtn === false &&
+                    showBtn === false && chosenWorkout.userId === userId &&
                         <Form onSubmit={handleUpdateWorkout}>
                             <TextArea 
                                 placeholder="add description" 
@@ -134,9 +137,12 @@ const ExerciseCardForWorkout = ({chosenWorkout, exercise, id}) => {
                 }
                 <Buttons>
                     <Btn onClick={() => handleToDetails(exercise.exerciseId)}>View</Btn>
-                    <Button onClick={(ev)=> {handleDeleteFromWorkout(ev, exercise.exerciseId)}}>
-                        <Trash/>
-                    </Button>
+                    <>
+                        {
+                            chosenWorkout.userId === userId &&
+                            <Button onClick={(ev)=> {handleDeleteFromWorkout(ev, exercise.exerciseId)}}><Trash/></Button>
+                        }
+                    </>
                 </Buttons>
                 </Info>
             </Wrapper>

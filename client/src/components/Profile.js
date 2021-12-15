@@ -298,6 +298,10 @@ const Profile = () => {
                                                     <option>Tabata</option>
                                                 </Select>
                                             </Label>
+                                            {/* {
+                                                formData.type === "Superset" &&
+                                                <p></p>
+                                            } */}
                                             <Label>
                                                 <Input 
                                                     type="text" 

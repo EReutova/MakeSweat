@@ -28,7 +28,6 @@ const deleteWorkout = async (req, res) => {
         
         //updating the array of user's workouts - removing one
         const result = await db.collection("users").updateOne(query, newValues);
-        console.log(workoutToDelete)
         if (result){
             res.status(204).json({ status: 204, message: "Workout is deleted successfully" })
         }

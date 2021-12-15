@@ -29,11 +29,9 @@ const FilteringBar = ({displayFilter, setDisplayFilter}) => {
     }
     const handleComplexSearch = (ev) => {
         ev.preventDefault();
-        console.log(filteredSearch);
         fetch(`/exercises?searchRequest=${inputValue}&equipment=${filteredSearch.equipment}&target=${filteredSearch.target}&bodyPart=${filteredSearch.bodyPart}&start=${start}&limit=${limit}`)
         .then(res => res.json())
         .then(data => {
-            console.log(data)
             setExercises([...data.data]);
             setDisplayFilter(false);
             setFilteredSearch(initialState);

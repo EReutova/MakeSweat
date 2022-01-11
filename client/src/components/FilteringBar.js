@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 
 import { useHistory } from "react-router-dom";
@@ -11,7 +11,6 @@ const FilteringBar = ({displayFilter, setDisplayFilter}) => {
 
     const { 
         inputValue, 
-        exercises,
         setExercises, 
         start, limit, 
         filteredSearch, setFilteredSearch,

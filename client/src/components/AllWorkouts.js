@@ -112,24 +112,5 @@ const Span = styled.span`
     text-transform: capitalize;
 `;
 
-const Input = styled.input`
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    width: 500px;
-`;
-const Inp = styled(Input)`
-    width: 350px;
-`;
-const Error = styled.p`
-    padding: 10px;
-    margin: 20px 0;
-    font-size: 26px;
-    text-align: center;
-    color: var(--color-red-crayola);
-    border: 2px solid var(--color-red-crayola);
-    border-radius: 5px;
-`;
-
 export default AllWorkouts;
 
